@@ -4,6 +4,7 @@ import { NUBE_ACTIVA } from '../config';
 import { esErrorDeRed, supabase, urlDeRetorno } from '../services/supabase';
 import { SupabaseRepository } from '../services/supabaseRepository';
 import { usarRepositorio } from '../services/repository';
+import { DocumentosNube, usarDocumentosRepo } from '../services/documentos';
 import { Marca } from './ui';
 
 /**
@@ -84,6 +85,7 @@ function AccesoNube({ children }: { children: ReactNode }) {
       }
       recordarMiembro(email);
       usarRepositorio(new SupabaseRepository(sb, email));
+      usarDocumentosRepo(new DocumentosNube(sb, email));
       setEstado((prev) => (prev.tipo === 'ok' && prev.email === email ? prev : { tipo: 'ok', email, nombre }));
     },
     [sb],
