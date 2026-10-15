@@ -18,6 +18,7 @@ const paths = {
   arrow: 'M5 12h14m-6-6l6 6-6 6',
   flag: 'M5 21V4m0 0h11l-2 4 2 4H5',
   close: 'M6 6l12 12M18 6L6 18',
+  map: 'M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14',
 } as const;
 
 export type IconName = keyof typeof paths;
