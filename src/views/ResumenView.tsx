@@ -7,6 +7,7 @@ import { RelatoCampos } from '../components/RelatoCampos';
 import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
 import { ahora, uid } from '../model/factory';
 import { RiesgosEditor } from '../components/RiesgosEditor';
+import { QuorumBloque } from '../components/QuorumBloque';
 import { useConfirmar } from '../components/Dialog';
 import { useToast } from '../components/Toast';
 import { useBitacora } from '../pdf/useBitacora';
@@ -82,10 +83,20 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
               <Input id="idea-resp" value={fecha.responsable} placeholder="nombre o comisión" onChange={(e) => set('responsable', e.target.value)} />
             </Campo>
           </div>
-          <button type="button" className="btn btn--mega btn--block" onClick={onProducir}>
-            ¡Vamos! Pasar a producción <Icon name="arrow" />
-          </button>
+          <QuorumBloque fecha={fecha} />
+          {fecha.quorum?.resultado !== 'no' && (
+            <button type="button" className="btn btn--mega btn--block" onClick={onProducir}>
+              ¡Vamos! Pasar a producción <Icon name="arrow" />
+            </button>
+          )}
         </div>
+      )}
+
+      {fecha.estado === 'produccion' && (
+        <details className="quorum-plegado" open={!!fecha.quorum}>
+          <summary>Quórum de la murga</summary>
+          <QuorumBloque fecha={fecha} />
+        </details>
       )}
 
       {!esIdea && (faltan.length > 0 || pend.length > 0) && (

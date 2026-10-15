@@ -72,7 +72,7 @@ export function NuevaFechaView({ idea: ideaInicial = false }: { idea?: boolean }
 
         <p className="lead">
           {esIdea
-            ? 'Con el nombre alcanza. Cuando decidamos ir, la pasamos a producción desde el Resumen.'
+            ? 'Con el nombre alcanza. Al guardarla, armás ahí mismo la encuesta de quórum para Cholas.'
             : 'Arrancamos con lo básico. El resto lo vamos completando con el checklist.'}
         </p>
 
@@ -138,7 +138,7 @@ export function NuevaFechaView({ idea: ideaInicial = false }: { idea?: boolean }
           )}
 
           <button type="submit" className="btn btn--mega btn--block">
-            {esIdea ? 'Guardar la idea' : 'Empezar a producir'} <Icon name="arrow" />
+            {esIdea ? 'Guardar y armar el quórum' : 'Empezar a producir'} <Icon name="arrow" />
           </button>
         </form>
       </main>

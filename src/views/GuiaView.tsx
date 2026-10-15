@@ -32,6 +32,17 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
           'Cuando decidimos ir: Resumen → Pasar a producción. Ahí queda quién es responsable.',
         ],
       },
+      {
+        momento: 'Antes de decir que sí',
+        titulo: 'Preguntamos el quórum',
+        texto:
+          'Mandamos la encuesta al grupo de Cholas: tres rojos al principio y al final, qué fecha es, qué día, la info que ayuda a decidir y “Puedo / No puedo”. La app arma la pregunta y las opciones para copiar. Después anotamos cómo salió: si hay quórum la fecha sigue; si no, queda registrada como sin quórum.',
+        donde: ['Resumen de la idea → Quórum'],
+        tips: [
+          'Los tres rojos 🔴🔴🔴 avisan que lo único que hay que hacer es contestar.',
+          'WhatsApp corta la pregunta a 255 caracteres: la app avisa si te pasás.',
+        ],
+      },
     ],
   },
   {
