@@ -64,7 +64,7 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         texto:
           'Artístico (repertorio, orden, duración), Vestuario y Maquillaje, y Difusión tienen su sección. Cada pregunta puede tener responsable y fecha límite.',
         donde: ['Artístico', 'Vestuario / Maquillaje', 'Difusión'],
-        tips: ['Comi Arti: recorte y orden de canciones.', 'Comi Maqui: propuesta de maquillaje y quién coordina.'],
+        tips: ['Comi Arti: repertorio y orden de canciones.', 'Comi Maqui: propuesta de maquillaje.'],
       },
       {
         momento: 'Todo el tiempo',
