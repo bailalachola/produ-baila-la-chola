@@ -1,4 +1,5 @@
 import { TODAS_LAS_PREGUNTAS, seccionLabel } from '../model/checklist';
+import { estadoQuorum } from '../model/quorum';
 import {
   esVisible,
   pendientesAbiertos,
@@ -38,6 +39,7 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     'Producción (responsables)': f.responsable,
     Contraparte: f.contacto ?? '',
     'Idea / nota': f.nota ?? '',
+    Quórum: estadoQuorum(f.quorum)?.texto ?? '',
     'Checklist %': progresoGeneral(f).porcentaje,
     'Pendientes abiertos': pendientesAbiertos(f).length,
     'Balance de Producción': f.cierre.balance ?? '',
