@@ -11,6 +11,7 @@ import { ChecklistView } from './ChecklistView';
 import { EconomiaView } from './EconomiaView';
 import { UpdatesView } from './UpdatesView';
 import { CierreView } from './CierreView';
+import { LinksView } from './LinksView';
 import { useBitacora } from '../pdf/useBitacora';
 import { EstadoGuardado } from '../components/EstadoGuardado';
 
@@ -127,6 +128,8 @@ function Contenido({ fecha, seccion }: { fecha: Fecha; seccion: SeccionId }) {
       return <UpdatesView fecha={fecha} />;
     case 'cierre':
       return <CierreView fecha={fecha} />;
+    case 'links':
+      return <LinksView fecha={fecha} />;
     default: {
       const s = getSeccion(seccion);
       return s ? <ChecklistView fecha={fecha} seccion={s} /> : null;

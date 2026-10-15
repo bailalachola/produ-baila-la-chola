@@ -14,11 +14,22 @@ import { exportarPlanilla } from '../services/planilla';
 type Filtro = 'activas' | 'realizadas' | 'cerradas' | 'todas';
 
 const FILTROS: { id: Filtro; label: string }[] = [
+  { id: 'todas', label: 'Todas' },
   { id: 'activas', label: 'Activas' },
   { id: 'realizadas', label: 'Realizadas' },
   { id: 'cerradas', label: 'Cerradas' },
-  { id: 'todas', label: 'Todas' },
 ];
+
+/** primero lo que se está produciendo (por fecha más próxima), después lo hecho (más reciente primero) */
+const ORDEN_ESTADO: Record<Fecha['estado'], number> = { produccion: 0, confirmada: 0, idea: 1, realizada: 2, cerrada: 3 };
+const ordenar = (a: Fecha, b: Fecha) => {
+  const ea = ORDEN_ESTADO[a.estado];
+  const eb = ORDEN_ESTADO[b.estado];
+  if (ea !== eb) return ea - eb;
+  return ea >= 2
+    ? (b.fecha || '').localeCompare(a.fecha || '')
+    : (a.fecha || '9999').localeCompare(b.fecha || '9999');
+};
 
 const pasaFiltro = (f: Fecha, filtro: Filtro) =>
   filtro === 'todas' ||
@@ -29,9 +40,7 @@ const pasaFiltro = (f: Fecha, filtro: Filtro) =>
 export function HomeView() {
   const { fechas, importar, cargarDemo, tieneDemo, remoto } = useStore();
   const sesion = useSesion();
-  const [filtro, setFiltro] = useState<Filtro>(() =>
-    fechas.some((f) => pasaFiltro(f, 'activas')) ? 'activas' : 'todas',
-  );
+  const [filtro, setFiltro] = useState<Filtro>('todas');
   const inputRef = useRef<HTMLInputElement>(null);
   const pedir = useDialogo();
   const toast = useToast();
@@ -40,7 +49,7 @@ export function HomeView() {
     () =>
       fechas
         .filter((f) => pasaFiltro(f, filtro))
-        .sort((a, b) => (a.fecha || '9999').localeCompare(b.fecha || '9999')),
+        .sort(ordenar),
     [fechas, filtro],
   );
 
@@ -118,6 +127,17 @@ export function HomeView() {
           </ul>
         )}
 
+        <a className="docs-acceso" href={href({ nombre: 'docs' })}>
+          <span className="docs-acceso__icono" aria-hidden="true">
+            <Icon name="pdf" size={26} />
+          </span>
+          <span className="docs-acceso__texto">
+            <strong>Documentación y accesos</strong>
+            <span>Rider, Drives, kit de prensa y dónde está cada cosa</span>
+          </span>
+          <Icon name="arrow" />
+        </a>
+
         <section className="backup" aria-labelledby="backup-t">
           <div className="backup__cabeza">
             <h2 id="backup-t" className="backup__titulo">Datos</h2>
@@ -170,7 +190,7 @@ export function HomeView() {
             />
             {!tieneDemo && (
               <button type="button" className="btn btn--ghost" onClick={cargarDemo}>
-                Cargar fecha de ejemplo
+                Recuperar la fecha de Córdoba
               </button>
             )}
           </div>

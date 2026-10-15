@@ -5,6 +5,12 @@ import { esVisible, progresoSeccion } from '../model/logic';
 import type { Fecha, Respuesta } from '../model/types';
 import { PreguntaCard } from '../components/PreguntaCard';
 import { Progreso, TituloSeccion } from '../components/ui';
+import { LinksDeFecha, categoriasLink } from './LinksView';
+
+const LINKS_POR_SECCION: Partial<Record<string, string[]>> = {
+  tecnica: ['tecnica'],
+  difusion: ['fotos', 'prensa_recibida', 'prensa_propia'],
+};
 
 export function ChecklistView({ fecha, seccion }: { fecha: Fecha; seccion: SeccionChecklist }) {
   const { actualizar } = useStore();
@@ -47,6 +53,12 @@ export function ChecklistView({ fecha, seccion }: { fecha: Fecha; seccion: Secci
         </span>
       </div>
       <div className="preguntas">{seccion.preguntas.map((p) => render(p))}</div>
+      {LINKS_POR_SECCION[seccion.id] && (
+        <div className="bloque">
+          <h3 className="bloque__titulo">Links</h3>
+          <LinksDeFecha fecha={fecha} categorias={categoriasLink(...LINKS_POR_SECCION[seccion.id]!)} />
+        </div>
+      )}
     </section>
   );
 }
