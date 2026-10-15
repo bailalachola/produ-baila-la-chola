@@ -11,30 +11,23 @@ import { useSesion } from '../components/Acceso';
 import { EstadoGuardado } from '../components/EstadoGuardado';
 import { exportarPlanilla } from '../services/planilla';
 import { BotonInstalar } from '../components/BotonInstalar';
+import { VistaToggle } from '../components/VistaToggle';
+import { agruparPorFecha } from '../model/agenda';
 
-type Filtro = 'activas' | 'realizadas' | 'cerradas' | 'todas';
+type Filtro = 'activas' | 'ideas' | 'realizadas' | 'cerradas' | 'todas';
 
 const FILTROS: { id: Filtro; label: string }[] = [
   { id: 'todas', label: 'Todas' },
   { id: 'activas', label: 'Activas' },
+  { id: 'ideas', label: 'Ideas' },
   { id: 'realizadas', label: 'Realizadas' },
   { id: 'cerradas', label: 'Cerradas' },
 ];
 
-/** primero lo que se está produciendo (por fecha más próxima), después lo hecho (más reciente primero) */
-const ORDEN_ESTADO: Record<Fecha['estado'], number> = { produccion: 0, confirmada: 0, idea: 1, realizada: 2, cerrada: 3 };
-const ordenar = (a: Fecha, b: Fecha) => {
-  const ea = ORDEN_ESTADO[a.estado];
-  const eb = ORDEN_ESTADO[b.estado];
-  if (ea !== eb) return ea - eb;
-  return ea >= 2
-    ? (b.fecha || '').localeCompare(a.fecha || '')
-    : (a.fecha || '9999').localeCompare(b.fecha || '9999');
-};
-
 const pasaFiltro = (f: Fecha, filtro: Filtro) =>
   filtro === 'todas' ||
-  (filtro === 'activas' && ['idea', 'produccion', 'confirmada'].includes(f.estado)) ||
+  (filtro === 'activas' && ['produccion', 'confirmada'].includes(f.estado)) ||
+  (filtro === 'ideas' && f.estado === 'idea') ||
   (filtro === 'realizadas' && f.estado === 'realizada') ||
   (filtro === 'cerradas' && f.estado === 'cerrada');
 
@@ -46,13 +39,16 @@ export function HomeView() {
   const pedir = useDialogo();
   const toast = useToast();
 
-  const visibles = useMemo(
-    () =>
-      fechas
-        .filter((f) => pasaFiltro(f, filtro))
-        .sort(ordenar),
-    [fechas, filtro],
-  );
+  // orden cronológico: próximas → sin día → ya pasaron (lo hecho va quedando abajo solo)
+  const grupos = useMemo(() => {
+    const g = agruparPorFecha(fechas.filter((f) => pasaFiltro(f, filtro)));
+    return [
+      { id: 'proximas', titulo: 'Próximas', fechas: g.proximas },
+      { id: 'sin-fecha', titulo: 'Sin día todavía', fechas: g.sinFecha },
+      { id: 'pasadas', titulo: 'Ya pasaron', fechas: g.pasadas },
+    ].filter((x) => x.fechas.length > 0);
+  }, [fechas, filtro]);
+  const hayVisibles = grupos.length > 0;
 
   const conteo = (fl: Filtro) => fechas.filter((f) => pasaFiltro(f, fl)).length;
 
@@ -95,10 +91,14 @@ export function HomeView() {
         <a href={href({ nombre: 'nueva' })} className="btn btn--mega">
           <Icon name="plus" size={26} /> Nueva fecha
         </a>
+        <a href={href({ nombre: 'nueva', idea: true })} className="portada__idea">
+          💡 Anotar una idea
+        </a>
         <BotonInstalar />
       </header>
 
       <main className="contenedor">
+        <VistaToggle actual="lista" />
         <div className="filtros" role="tablist" aria-label="Filtrar fechas">
           {FILTROS.map((f) => (
             <button
@@ -113,20 +113,29 @@ export function HomeView() {
           ))}
         </div>
 
-        {visibles.length === 0 ? (
+        {!hayVisibles ? (
           <Vacio>
             {fechas.length === 0
               ? 'Todavía no hay fechas. ¡Arranquemos la primera!'
               : 'No hay fechas en este filtro.'}
           </Vacio>
         ) : (
-          <ul className="cards">
-            {visibles.map((f, i) => (
-              <li key={f.id}>
-                <FechaCard fecha={f} indice={i} />
-              </li>
-            ))}
-          </ul>
+          grupos.map((g) => (
+            <section key={g.id} className="grupo" aria-labelledby={`grupo-${g.id}`}>
+              {grupos.length > 1 && (
+                <h2 id={`grupo-${g.id}`} className="grupo__titulo">
+                  {g.titulo} <span>{g.fechas.length}</span>
+                </h2>
+              )}
+              <ul className="cards">
+                {g.fechas.map((f, i) => (
+                  <li key={f.id}>
+                    <FechaCard fecha={f} indice={i} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
         )}
 
         <a className="docs-acceso docs-acceso--guia" href={href({ nombre: 'proceso' })}>
@@ -240,8 +249,13 @@ function FechaCard({ fecha: f, indice }: { fecha: Fecha; indice: number }) {
       </div>
       <h3 className="card__nombre">{f.nombre}</h3>
       <p className="card__meta">
-        {f.lugar || 'Lugar a definir'} · {f.responsable || 'Sin responsable'}
+        {f.lugar || 'Lugar a definir'} · {f.responsable || (f.estado === 'idea' ? 'Sin dueña todavía' : 'Sin responsable')}
       </p>
+      {f.estado === 'idea' ? (
+        <div className="card__pie card__pie--idea">
+          <p className="card__nota">{f.nota?.trim() || 'Idea para más adelante. Todavía no la producimos.'}</p>
+        </div>
+      ) : (
       <div className="card__pie">
         <div className="card__prog">
           {f.estado === 'cerrada' ? (
@@ -257,6 +271,7 @@ function FechaCard({ fecha: f, indice }: { fecha: Fecha; indice: number }) {
           {pend ? `${pend} pendiente${pend === 1 ? '' : 's'}` : 'Sin pendientes'}
         </span>
       </div>
+      )}
     </a>
   );
 }

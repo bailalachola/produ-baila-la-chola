@@ -69,9 +69,14 @@ export function FechaView({ id, seccion }: { id: string; seccion: SeccionId }) {
           <span>{fechaCorta(fecha.fecha)}</span>
           <span aria-hidden="true">·</span>
           <span>{fecha.lugar || 'Lugar a definir'}</span>
-          <span aria-hidden="true">·</span>
-          <span>{fecha.responsable}</span>
+          {fecha.responsable && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>{fecha.responsable}</span>
+            </>
+          )}
         </p>
+        {fecha.estado !== 'idea' && (
         <div className="indicadores">
           {fecha.estado === 'cerrada' ? (
             <div className="indicador indicador--cerrada">
@@ -93,6 +98,7 @@ export function FechaView({ id, seccion }: { id: string; seccion: SeccionId }) {
             <Icon name="flag" size={16} /> {pend} pendiente{pend === 1 ? '' : 's'}
           </a>
         </div>
+        )}
       </header>
 
       <nav ref={navRef} className="secciones" aria-label="Secciones de la fecha">

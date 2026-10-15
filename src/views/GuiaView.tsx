@@ -22,12 +22,15 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
     estado: 'idea',
     pasos: [
       {
-        momento: 'Apenas llega la invitación',
-        titulo: 'Cargamos la fecha',
+        momento: 'Apenas llega la invitación (o se nos ocurre algo)',
+        titulo: 'La anotamos como idea',
         texto:
-          'Aunque todavía no sepamos si vamos, la cargamos. Alcanza con el nombre, el lugar, quién la produce y con quién hablamos del otro lado. Lo demás se completa después.',
-        donde: ['Inicio → Nueva fecha'],
-        tips: ['Si todavía no está decidida, dejala en estado Idea.', 'Quien la carga queda como responsable de Producción.'],
+          'Aunque todavía no sepamos si vamos, la anotamos. Con el nombre alcanza; si queremos, sumamos de qué se trata, quién la trajo y con quién hablamos del otro lado. Las ideas quedan juntas en el filtro Ideas.',
+        donde: ['Inicio → Anotar una idea', 'Inicio → Ideas'],
+        tips: [
+          'Si ya está decidida, cargala directo con Nueva fecha → Ya la producimos.',
+          'Cuando decidimos ir: Resumen → Pasar a producción. Ahí queda quién es responsable.',
+        ],
       },
     ],
   },
@@ -97,6 +100,14 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         texto:
           'Pasamos el estado a Confirmada. En el Resumen, “Antes de cerrar la fecha nos falta…” muestra lo crítico que todavía no está.',
         donde: ['Resumen → Estado'],
+      },
+      {
+        momento: 'Cuando hay que contar qué viene',
+        titulo: 'Compartimos la agenda',
+        texto:
+          'En el calendario se ven todas las fechas en el tiempo. Desde ahí copiamos la agenda de lo comprometido para el grupo, o bajamos el archivo para sumarla al calendario del celu.',
+        donde: ['Inicio → Calendario'],
+        tips: ['Las que siguen en producción salen como “a confirmar”.'],
       },
       {
         momento: 'Unos días antes',

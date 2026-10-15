@@ -4,7 +4,8 @@ import { CHECKLIST, seccionLabel } from '../model/checklist';
 import { faltantesCriticos, pendientesAbiertos, progresoSeccion } from '../model/logic';
 import { ESTADOS, ESTADO_LABEL, RELATO_PREVIO, TIPOS_FECHA, type Fecha } from '../model/types';
 import { RelatoCampos } from '../components/RelatoCampos';
-import { Campo, Icon, Input, Progreso, Select, TituloSeccion } from '../components/ui';
+import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
+import { ahora, uid } from '../model/factory';
 import { RiesgosEditor } from '../components/RiesgosEditor';
 import { useConfirmar } from '../components/Dialog';
 import { useToast } from '../components/Toast';
@@ -19,6 +20,27 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
   const pend = pendientesAbiertos(fecha);
 
   const set = <K extends keyof Fecha>(k: K, v: Fecha[K]) => actualizar(fecha.id, (f) => ({ ...f, [k]: v }));
+
+  const esIdea = fecha.estado === 'idea';
+
+  async function onProducir() {
+    const quien = fecha.responsable.trim();
+    if (!quien) {
+      toast('Antes de arrancar, decí quién queda responsable.', 'error');
+      document.getElementById('idea-resp')?.focus();
+      return;
+    }
+    actualizar(fecha.id, (f) => ({
+      ...f,
+      estado: 'produccion',
+      updates: [
+        { id: uid('upd'), cuando: ahora(), categoria: 'DECISIÓN', texto: `Decidimos ir: pasamos la idea a producción. Responsable de Producción: ${quien}.`, autor: quien },
+        ...f.updates,
+      ],
+    }));
+    toast('¡A producir! Arrancamos por el checklist 🥁');
+    ir({ nombre: 'fecha', id: fecha.id, seccion: 'espacio' });
+  }
 
   async function onEliminar() {
     const ok = await confirmar(
@@ -40,7 +62,33 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
     <section className="resumen">
       <TituloSeccion>Resumen</TituloSeccion>
 
-      {(faltan.length > 0 || pend.length > 0) && (
+      {esIdea && (
+        <div className="idea">
+          <p className="idea__sello">💡 Es una idea</p>
+          <p className="idea__texto">
+            Todavía no la estamos produciendo. Anotá lo que vayan sabiendo; cuando decidan ir, la pasan a producción y arranca el checklist.
+          </p>
+          <div className="form">
+            <Campo id="idea-nota" label="¿De qué se trata?">
+              <TextArea
+                id="idea-nota"
+                rows={4}
+                placeholder="Cómo llegó, qué nos entusiasma, qué habría que averiguar…"
+                value={fecha.nota ?? ''}
+                onChange={(e) => set('nota', e.target.value)}
+              />
+            </Campo>
+            <Campo id="idea-resp" label="¿Quién la produciría?" hint="Hace falta para pasarla a producción.">
+              <Input id="idea-resp" value={fecha.responsable} placeholder="nombre o comisión" onChange={(e) => set('responsable', e.target.value)} />
+            </Campo>
+          </div>
+          <button type="button" className="btn btn--mega btn--block" onClick={onProducir}>
+            ¡Vamos! Pasar a producción <Icon name="arrow" />
+          </button>
+        </div>
+      )}
+
+      {!esIdea && (faltan.length > 0 || pend.length > 0) && (
         <div className="falta">
           <h3 className="falta__titulo">Antes de cerrar la fecha nos falta…</h3>
           <ul className="falta__lista">
@@ -165,7 +213,7 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
       </div>
 
       <div className="acciones-finales">
-        {fecha.estado !== 'cerrada' && fecha.estado !== 'realizada' && (
+        {!esIdea && fecha.estado !== 'cerrada' && fecha.estado !== 'realizada' && (
           <a className="btn btn--mega btn--block btn--alt" href={href({ nombre: 'fecha', id: fecha.id, seccion: 'integrador' })}>
             <Icon name="copy" size={24} /> Armar integrador
           </a>
