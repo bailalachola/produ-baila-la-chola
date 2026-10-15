@@ -165,6 +165,11 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
       </div>
 
       <div className="acciones-finales">
+        {fecha.estado !== 'cerrada' && fecha.estado !== 'realizada' && (
+          <a className="btn btn--mega btn--block btn--alt" href={href({ nombre: 'fecha', id: fecha.id, seccion: 'integrador' })}>
+            <Icon name="copy" size={24} /> Armar integrador
+          </a>
+        )}
         <button type="button" className="btn btn--mega btn--block" onClick={() => generar(fecha)} disabled={generando}>
           <Icon name="pdf" size={24} /> {generando ? 'Armando la bitácora…' : 'Generar bitácora'}
         </button>

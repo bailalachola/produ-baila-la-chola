@@ -129,6 +129,17 @@ export function HomeView() {
           </ul>
         )}
 
+        <a className="docs-acceso docs-acceso--guia" href={href({ nombre: 'proceso' })}>
+          <span className="docs-acceso__icono" aria-hidden="true">
+            <Icon name="map" size={26} />
+          </span>
+          <span className="docs-acceso__texto">
+            <strong>Cómo producimos</strong>
+            <span>El proceso de una fecha, paso a paso, y dónde se hace cada cosa</span>
+          </span>
+          <Icon name="arrow" />
+        </a>
+
         <a className="docs-acceso" href={href({ nombre: 'docs' })}>
           <span className="docs-acceso__icono" aria-hidden="true">
             <Icon name="pdf" size={26} />
