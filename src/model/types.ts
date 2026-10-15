@@ -1,3 +1,5 @@
+import type { Integrador } from './integrador';
+
 /**
  * MODELO DE DATOS DE LA PRODU
  * Todo lo que se guarda vive acá. La UI no conoce cómo se persiste:
@@ -71,6 +73,7 @@ export type SeccionId =
   | SeccionChecklistId
   | 'economia'
   | 'links'
+  | 'integrador'
   | 'updates'
   | 'cierre';
 
@@ -253,6 +256,8 @@ export interface Fecha {
   relato: Partial<Record<RelatoId, string>>;
   /** links de Drive y otros: fotos, prensa, rider… */
   links: Link[];
+  /** mensaje de WhatsApp para el grupo (si no existe, se sugiere desde el checklist) */
+  integrador?: Integrador;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
