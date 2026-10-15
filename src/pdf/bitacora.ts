@@ -12,6 +12,7 @@ import {
   valorPlanificado,
 } from '../model/logic';
 import {
+  CATEGORIAS_LINK_FECHA,
   ESTADO_LABEL,
   ESTADO_MOV_LABEL,
   PREGUNTAS_CIERRE,
@@ -285,6 +286,30 @@ class Doc {
     this.font('normal', 9.8);
     this.pdf.text(lineas, M + 8, this.y);
     this.y += lineas.length * 4.4 + 1.8;
+  }
+
+  /** link clickeable: título en negrita y la dirección abajo, chiquita */
+  enlace(titulo: string, url: string, nota?: string) {
+    const t = limpio(titulo);
+    this.espacio(12);
+    this.fill(C.magenta);
+    this.estrellita(M + 1.6, this.y - 1.3);
+    this.font('bold', 10);
+    this.color(C.negro);
+    this.pdf.textWithLink(t, M + 5, this.y, { url });
+    this.y += 4.2;
+    this.font('normal', 7.8);
+    this.color(C.violeta);
+    const u = this.pdf.splitTextToSize(url, ANCHO - 5) as string[];
+    this.pdf.textWithLink(u[0] ?? url, M + 5, this.y, { url });
+    this.y += 3.6;
+    if (nota) {
+      this.font('italic', 8.5);
+      this.color(C.gris);
+      this.pdf.text(limpio(nota), M + 5, this.y);
+      this.y += 4;
+    }
+    this.y += 1.8;
   }
 
   estrellita(x: number, y: number) {
@@ -692,6 +717,17 @@ export function generarBitacora(f: Fecha): jsPDF {
       },
     );
     d.parrafo('Marca magenta: decisión · naranja: cambio · violeta: resuelto.', { size: 8, color: C.gris, estilo: 'italic' });
+  }
+
+  // Links y archivos
+  if (f.links.length) {
+    d.seccion('Links y archivos');
+    for (const c of CATEGORIAS_LINK_FECHA) {
+      const lista = f.links.filter((l) => l.categoria === c.id);
+      if (!lista.length) continue;
+      d.subtitulo(c.label, C.violeta);
+      for (const l of lista) d.enlace(l.titulo || l.url, l.url, l.nota);
+    }
   }
 
   // 17. Estado final y balance económico
