@@ -37,6 +37,7 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     Estado: ESTADO_LABEL[f.estado],
     'Producción (responsables)': f.responsable,
     Contraparte: f.contacto ?? '',
+    'Idea / nota': f.nota ?? '',
     'Checklist %': progresoGeneral(f).porcentaje,
     'Pendientes abiertos': pendientesAbiertos(f).length,
     'Balance de Producción': f.cierre.balance ?? '',
