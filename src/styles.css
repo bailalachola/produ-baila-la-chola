@@ -2771,3 +2771,16 @@ svg {
 .compartir-agenda .wa {
   margin: 0 0 16px;
 }
+
+.varios__falta,
+.varios__ok {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.varios__falta {
+  color: var(--magenta-osc);
+}
+.varios__ok {
+  color: var(--violeta);
+}

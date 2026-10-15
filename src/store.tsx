@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { Fecha, NuevaFechaInput } from './model/types';
 import { ahora, crearFecha } from './model/factory';
-import { DEMO_ID, DEMO_VERSION, fechaDemo } from './model/demo';
+import { DEMO_ID, DEMO_VERSION, completarConNoAplica, fechaDemo } from './model/demo';
+import { progresoGeneral } from './model/logic';
 import { CLAVE_LOCAL, LocalStorageRepository, repositorio } from './services/repository';
 import { SinConexion } from './services/supabaseRepository';
 import { useToast } from './components/Toast';
@@ -150,6 +151,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const nueva = fechaDemo();
       await repo.guardar(nueva).catch(() => undefined);
       lista = lista.map((f) => (f.id === DEMO_ID ? nueva : f));
+    }
+    // Córdoba es un registro cerrado: si el checklist suma preguntas nuevas, quedan como "No aplica"
+    const cordoba = lista.find((f) => f.id === DEMO_ID && f.estado === 'cerrada');
+    if (cordoba && progresoGeneral(cordoba).porcentaje < 100) {
+      const completa = { ...cordoba, respuestas: completarConNoAplica(cordoba.respuestas) };
+      await repo.guardar(completa).catch(() => undefined);
+      lista = lista.map((f) => (f.id === DEMO_ID ? completa : f));
     }
     return lista;
   }, []);
