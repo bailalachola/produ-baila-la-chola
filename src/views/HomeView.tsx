@@ -10,6 +10,7 @@ import { useToast } from '../components/Toast';
 import { useSesion } from '../components/Acceso';
 import { EstadoGuardado } from '../components/EstadoGuardado';
 import { exportarPlanilla } from '../services/planilla';
+import { BotonInstalar } from '../components/BotonInstalar';
 
 type Filtro = 'activas' | 'realizadas' | 'cerradas' | 'todas';
 
@@ -94,6 +95,7 @@ export function HomeView() {
         <a href={href({ nombre: 'nueva' })} className="btn btn--mega">
           <Icon name="plus" size={26} /> Nueva fecha
         </a>
+        <BotonInstalar />
       </header>
 
       <main className="contenedor">
