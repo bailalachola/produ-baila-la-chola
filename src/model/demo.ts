@@ -17,7 +17,7 @@ export function fechaDemo(): Fecha {
 }
 
 /** Lo que no se registró en la bitácora de Córdoba queda como "No aplica", así la fecha queda al 100%. */
-function completarConNoAplica(r: Record<string, Respuesta>): Record<string, Respuesta> {
+export function completarConNoAplica(r: Record<string, Respuesta>): Record<string, Respuesta> {
   const out = { ...r };
   for (const u of TODAS_LAS_PREGUNTAS) {
     if (!esVisible(u, out)) continue;
@@ -89,7 +89,6 @@ function fechaDemoBase(): Fecha {
       log_encuentro: { valor: 'Colectivo en Parque Sarmiento, 21:00' },
       log_horarios: { valor: '21:00 concentración general en el colectivo · maquillaje, vestuario e instrumentos · presentación' },
 
-      art_recorte: { valor: 'Recorte del espectáculo y orden de canciones definidos por Comi Arti.' },
       art_responsable: { valor: 'Comi Arti' },
 
       ves_confirmado: { estado: 'si' },
@@ -97,7 +96,6 @@ function fechaDemoBase(): Fecha {
       ves_maquillaje: { valor: 'Formato simple y práctico, articulado con Comi Maqui y Comisión Encuentro.' },
       ves_lugar: { valor: 'Maquillaje en el entorno del colectivo; cambio de vestuario dentro del colectivo' },
       ves_horario: { valor: '21:00' },
-      ves_comision: { valor: 'Comi Maqui' },
     },
 
     relato: {

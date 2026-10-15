@@ -13,7 +13,7 @@ import type { Respuesta, SeccionChecklistId, SeccionId } from './types';
  *  'dato', 'texto' y 'opcion' también aceptan "A confirmar" y "No aplica".
  */
 
-export type TipoPregunta = 'sino' | 'dato' | 'texto' | 'opcion';
+export type TipoPregunta = 'sino' | 'dato' | 'texto' | 'opcion' | 'varios';
 
 export interface Pregunta {
   id: string;
@@ -22,6 +22,8 @@ export interface Pregunta {
   input?: 'text' | 'number' | 'time';
   placeholder?: string;
   opciones?: string[];
+  /** para 'varios': la opción que significa "nada de lo anterior" */
+  ninguna?: string;
   ayuda?: string;
   /** distinguir IDEAL / MÍNIMO NECESARIO / ACORDADO */
   triple?: boolean;
@@ -62,6 +64,19 @@ const texto = (id: string, label: string, extra: Partial<Pregunta> = {}): Pregun
   ...extra,
 });
 
+/** elegir varias opciones (se guarda como "Luz, Espejos") */
+const varios = (id: string, label: string, opciones: string[], extra: Partial<Pregunta> = {}): Pregunta => ({
+  id,
+  label,
+  tipo: 'varios',
+  opciones,
+  ...extra,
+});
+
+/** Lo que tiene que tener un camarín (o el lugar donde nos cambiamos) para estar bien */
+export const CAMARIN_IDEAL = ['Luz', 'Espejos', 'Mesa', 'Sillas'];
+const AYUDA_CAMARIN = 'Lo ideal: buena luz, espejos, mesa y sillas. Marcá lo que hay; lo que falta lo llevamos o lo pedimos.';
+
 export const CHECKLIST: SeccionChecklist[] = [
   {
     id: 'espacio',
@@ -84,8 +99,14 @@ export const CHECKLIST: SeccionChecklist[] = [
           preguntas: [
             dato('esp_cambio_alt', '¿Dónde nos cambiamos entonces?'),
             sino('esp_cambio_seguro', '¿Es un lugar seguro y cuidado para cambiarnos?'),
+            varios('esp_cambio_tiene', '¿Qué tiene ese lugar?', CAMARIN_IDEAL, { ayuda: AYUDA_CAMARIN, ninguna: 'Nada de esto' }),
           ],
         },
+      }),
+      varios('esp_camarin_tiene', '¿Qué tiene el camarín?', CAMARIN_IDEAL, {
+        ayuda: AYUDA_CAMARIN,
+        ninguna: 'Nada de esto',
+        visibleSi: (r) => r.esp_camarin?.estado !== 'no',
       }),
       dato('esp_camarines_cant', '¿Cuántos camarines hay?', {
         input: 'number',
@@ -154,7 +175,7 @@ export const CHECKLIST: SeccionChecklist[] = [
         id: 'log_traslado',
         label: '¿Cómo viajamos?',
         tipo: 'opcion',
-        opciones: ['Colectivo contratado', 'Transporte público', 'Autos', 'Avión', 'A pie', 'Otro'],
+        opciones: ['Colectivo contratado', 'Transporte público', 'Autos', 'Avión', 'A pie', 'Cada una por su cuenta', 'Otro'],
         comparable: 'Traslado',
         critica: true,
       },
@@ -181,11 +202,14 @@ export const CHECKLIST: SeccionChecklist[] = [
       texto('art_repertorio', '¿Qué repertorio hacemos?', { critica: true }),
       texto('art_orden', '¿En qué orden van las canciones?'),
       dato('art_duracion', '¿Cuánto dura lo que hacemos?', { placeholder: 'ej: 35 minutos', comparable: 'Duración del show' }),
-      texto('art_recorte', '¿Qué recorte del espectáculo llevamos?'),
       dato('art_artistas', '¿Cuántas artistas suben?', { input: 'number', comparable: 'Artistas en escena' }),
       texto('art_instrumentos', '¿Qué instrumentos van?'),
       texto('art_especiales', '¿Hay intervenciones especiales?'),
-      dato('art_responsable', '¿Qué comisión o quién responde por lo artístico?'),
+      dato('art_responsable', '¿Quién coordina lo artístico en esta fecha?', {
+        ayuda:
+          'La persona o comisión que define qué hacemos y en qué orden, y que el día de la fecha resuelve lo artístico si hay cambios (cortar una canción, mover el orden). Ej: Comi Arti, o quien dirige ese día. Si lo decide toda la murga, poné “la murga”.',
+        placeholder: 'ej: Comi Arti',
+      }),
     ],
   },
   {
@@ -200,7 +224,6 @@ export const CHECKLIST: SeccionChecklist[] = [
       dato('ves_lugar', '¿Dónde nos preparamos?'),
       dato('ves_horario', '¿A qué hora arrancamos a prepararnos?', { input: 'time', comparable: 'Horario de preparación' }),
       texto('ves_necesidades', '¿Hay necesidades particulares?'),
-      dato('ves_comision', '¿Qué comisión es responsable?'),
     ],
   },
   {

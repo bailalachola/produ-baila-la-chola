@@ -1,5 +1,6 @@
 import type { Fecha, Respuesta } from './types';
 import { formatoMonto } from './logic';
+import { CAMARIN_IDEAL } from './checklist';
 
 /**
  * INTEGRADOR
@@ -95,6 +96,12 @@ export function integradorSugerido(f: Fecha): Integrador {
   } else if (r.esp_camarin?.estado === 'si') {
     camarines = det(r.esp_camarin) || 'Hay camarín.';
   }
+  const tiene = v(r.esp_camarin?.estado === 'no' ? r.esp_cambio_tiene : r.esp_camarin_tiene);
+  if (tiene) {
+    const hay = tiene.split(',').map((x) => x.trim());
+    const faltan = CAMARIN_IDEAL.filter((x) => !hay.includes(x));
+    if (faltan.length) camarines = [camarines, `Ojo: no hay ${faltan.join(', ').toLowerCase()}. Llevemos lo que podamos.`].filter(Boolean).join('\n');
+  }
   camarines = [camarines, 'Cuando lleguemos, atendamos las indicaciones de produ para ocupar espacios y dejar pertenencias, trajes y gorros.']
     .filter(Boolean)
     .join('\n');
@@ -131,7 +138,7 @@ export function integradorSugerido(f: Fecha): Integrador {
     vestuarioModo: r.ves_confirmado?.estado === 'si' ? 'COMPLETO' : '',
     vestuario: [v(r.ves_propuesta), VESTUARIO_MODELO].filter(Boolean).join('\n\n'),
     maquillajeModo: v(r.ves_maquillaje) ? 'COMPLETO' : '',
-    maquillajeCoordina: v(r.ves_comision),
+    maquillajeCoordina: '',
     maquillaje: [v(r.ves_maquillaje), v(r.ves_lugar) && `Nos preparamos en: ${v(r.ves_lugar)}.`].filter(Boolean).join('\n'),
     comida,
     recaudacion,
