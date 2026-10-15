@@ -13,6 +13,9 @@ import '@fontsource/work-sans/latin-500.css';
 import '@fontsource/work-sans/latin-600.css';
 import '@fontsource/work-sans/latin-700.css';
 import './styles.css';
+import { iniciarPwa } from './pwa';
+
+iniciarPwa();
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Falta #root en index.html');
