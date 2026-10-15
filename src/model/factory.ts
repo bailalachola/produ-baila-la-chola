@@ -12,6 +12,12 @@ export const ahora = (): string => new Date().toISOString();
 
 export function crearFecha(input: NuevaFechaInput): Fecha {
   const t = ahora();
+  const esIdea = input.estado === 'idea';
+  const quien = input.responsable.trim();
+  const nota = input.nota?.trim() || undefined;
+  const textoInicial = esIdea
+    ? `Anotamos la idea${quien ? ` (la trajo ${quien})` : ''}.${nota ? ` ${nota}` : ''}`
+    : `Arrancamos a producir la fecha. Responsable de Producción: ${quien}.`;
   return {
     id: uid('fecha'),
     nombre: input.nombre.trim(),
@@ -20,7 +26,8 @@ export function crearFecha(input: NuevaFechaInput): Fecha {
     tipo: input.tipo,
     responsable: input.responsable.trim(),
     contacto: input.contacto?.trim() || undefined,
-    estado: 'produccion',
+    nota,
+    estado: esIdea ? 'idea' : 'produccion',
     creada: t,
     actualizada: t,
     respuestas: {},
@@ -31,8 +38,8 @@ export function crearFecha(input: NuevaFechaInput): Fecha {
         id: uid('upd'),
         cuando: t,
         categoria: 'UPDATE',
-        texto: `Arrancamos a producir la fecha. Responsable de Producción: ${input.responsable.trim()}.`,
-        autor: input.responsable.trim(),
+        texto: textoInicial,
+        autor: quien,
       },
     ],
     riesgos: [],

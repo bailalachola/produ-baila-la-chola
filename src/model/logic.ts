@@ -224,7 +224,7 @@ export function formatoMonto(monto: number, moneda: Moneda): string {
 /* ---------- fechas y formato ---------- */
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-const MESES_LARGO = [
+export const MESES_LARGO = [
   'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
 ];

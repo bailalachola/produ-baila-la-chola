@@ -242,6 +242,8 @@ export interface Fecha {
   tipo: string;
   responsable: string;
   contacto?: string;
+  /** de qué se trata la idea / cómo llegó (sobre todo para fechas en estado Idea) */
+  nota?: string;
   /** etiqueta para WhatsApp: #CÓRDOBA */
   etiqueta?: string;
   estado: EstadoFecha;
@@ -266,8 +268,11 @@ export interface Fecha {
 /** Datos que se piden al crear una fecha */
 export type NuevaFechaInput = Pick<
   Fecha,
-  'nombre' | 'fecha' | 'lugar' | 'responsable' | 'contacto' | 'tipo'
->;
+  'nombre' | 'fecha' | 'lugar' | 'responsable' | 'contacto' | 'tipo' | 'nota'
+> & {
+  /** 'idea': se anota para más adelante, sin arrancar a producir */
+  estado?: 'idea' | 'produccion';
+};
 
 /* ---------- links (por fecha y documentación general) ---------- */
 
