@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Fecha } from '../model/types';
 import { normalizarFecha } from '../model/factory';
 import { LocalStorageRepository, type FechasRepository } from './repository';
-import { esErrorDeRed } from './supabase';
+import { ID_DOCUMENTOS, esErrorDeRed } from './supabase';
 
 /**
  * REPOSITORIO EN LA NUBE (Supabase / PostgreSQL)
@@ -111,7 +111,7 @@ export class SupabaseRepository implements FechasRepository {
     // primero subimos lo que haya quedado pendiente, para no pisarlo con lo de la nube
     await this.sincronizar().catch(() => undefined);
     try {
-      const { data, error } = await this.sb.from('fechas').select('data');
+      const { data, error } = await this.sb.from('fechas').select('data').neq('id', ID_DOCUMENTOS);
       if (error) throw error;
       const remotas = (data ?? []).map((r) => normalizarFecha((r as { data: Fecha }).data));
       // lo que todavía no se pudo subir manda sobre la versión de la nube
@@ -157,11 +157,14 @@ export class SupabaseRepository implements FechasRepository {
 
   async reemplazarTodo(fechas: Fecha[]): Promise<void> {
     try {
-      const ids = fechas.map((f) => f.id);
+      // la fila de Documentación y accesos no se toca al restaurar fechas
+      const ids = [...fechas.map((f) => f.id), ID_DOCUMENTOS];
       const borrar = this.sb.from('fechas').delete();
-      const { error: errBorrar } = ids.length
-        ? await borrar.not('id', 'in', `(${ids.map((i) => `"${i.replace(/"/g, '')}"`).join(',')})`)
-        : await borrar.neq('id', '');
+      const { error: errBorrar } = await borrar.not(
+        'id',
+        'in',
+        `(${ids.map((i) => `"${i.replace(/"/g, '')}"`).join(',')})`,
+      );
       if (errBorrar) throw errBorrar;
       if (fechas.length) {
         const ahora = new Date().toISOString();
@@ -178,8 +181,14 @@ export class SupabaseRepository implements FechasRepository {
   }
 
   async estaVacio(): Promise<boolean> {
-    const { count, error } = await this.sb.from('fechas').select('id', { count: 'exact', head: true });
-    if (error) return false; // ante la duda, no sembramos nada
+    const { count, error } = await this.sb
+      .from('fechas')
+      .select('id', { count: 'exact', head: true })
+      .neq('id', ID_DOCUMENTOS);
+    if (error) {
+      console.error('No pudimos contar las fechas', error);
+      return false; // ante la duda, no sembramos nada
+    }
     return (count ?? 0) === 0;
   }
 

@@ -7,7 +7,7 @@ import {
   todosLosPendientes,
   hoyISO,
 } from '../model/logic';
-import { ESTADO_LABEL, ESTADO_MOV_LABEL, type Fecha } from '../model/types';
+import { CATEGORIAS_LINK_FECHA, ESTADO_LABEL, ESTADO_MOV_LABEL, type Fecha } from '../model/types';
 import { descargarArchivo } from './backup';
 
 /**
@@ -105,7 +105,17 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     }),
   );
 
-  return { Fechas: resumen, Movimientos: movimientos, Pendientes: pendientes, Updates: updates, Checklist: checklist };
+  const links: Fila[] = ordenadas.flatMap((f) =>
+    f.links.map((l) => ({
+      Fecha: f.nombre,
+      Categoría: CATEGORIAS_LINK_FECHA.find((c) => c.id === l.categoria)?.label ?? l.categoria,
+      Qué: l.titulo,
+      Link: l.url,
+      Nota: l.nota ?? '',
+    })),
+  );
+
+  return { Fechas: resumen, Movimientos: movimientos, Pendientes: pendientes, Updates: updates, Links: links, Checklist: checklist };
 }
 
 export async function exportarPlanilla(fechas: Fecha[]): Promise<boolean> {

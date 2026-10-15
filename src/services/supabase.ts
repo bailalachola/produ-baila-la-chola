@@ -3,6 +3,9 @@ import { NUBE_ACTIVA, SUPABASE_KEY, SUPABASE_URL } from '../config';
 
 let cliente: SupabaseClient | null = null;
 
+/** Fila especial de la tabla `fechas` donde vive "Documentación y accesos" */
+export const ID_DOCUMENTOS = '__documentos__';
+
 /** Cliente de Supabase (null en modo local o dentro del artifact). */
 export function supabase(): SupabaseClient | null {
   if (!NUBE_ACTIVA) return null;
