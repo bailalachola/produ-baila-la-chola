@@ -8,16 +8,18 @@ import type { SeccionId } from './model/types';
 export type Ruta =
   | { nombre: 'home' }
   | { nombre: 'nueva' }
+  | { nombre: 'docs' }
   | { nombre: 'fecha'; id: string; seccion: SeccionId };
 
 const SECCIONES: SeccionId[] = [
   'resumen', 'pendientes', 'espacio', 'tecnica', 'logistica', 'artistico',
-  'vestuario', 'economia', 'difusion', 'updates', 'cierre',
+  'vestuario', 'economia', 'difusion', 'links', 'updates', 'cierre',
 ];
 
 export function parsear(hash: string): Ruta {
   const partes = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
   if (partes[0] === 'nueva') return { nombre: 'nueva' };
+  if (partes[0] === 'docs') return { nombre: 'docs' };
   if (partes[0] === 'fecha' && partes[1]) {
     const s = partes[2] as SeccionId | undefined;
     return { nombre: 'fecha', id: partes[1], seccion: s && SECCIONES.includes(s) ? s : 'resumen' };
@@ -31,6 +33,8 @@ export function href(r: Ruta): string {
       return '#/';
     case 'nueva':
       return '#/nueva';
+    case 'docs':
+      return '#/docs';
     case 'fecha':
       return `#/fecha/${encodeURIComponent(r.id)}/${r.seccion}`;
   }

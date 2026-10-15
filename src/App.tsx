@@ -3,6 +3,7 @@ import { useRuta } from './router';
 import { HomeView } from './views/HomeView';
 import { NuevaFechaView } from './views/NuevaFechaView';
 import { FechaView } from './views/FechaView';
+import { DocsView } from './views/DocsView';
 import { Marca } from './components/ui';
 
 export function App() {
@@ -26,6 +27,7 @@ export function App() {
       )}
       {ruta.nombre === 'home' && <HomeView />}
       {ruta.nombre === 'nueva' && <NuevaFechaView />}
+      {ruta.nombre === 'docs' && <DocsView />}
       {ruta.nombre === 'fecha' && <FechaView id={ruta.id} seccion={ruta.seccion} />}
     </>
   );

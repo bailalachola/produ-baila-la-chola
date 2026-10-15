@@ -34,6 +34,22 @@ const Ctx = createContext<Store | null>(null);
 /** espera antes de subir un cambio (para no mandar una escritura por cada tecla) */
 const DEMORA_GUARDADO = 700;
 const CLAVE_MIGRADO = 'produ-blc:migrado-a-nube';
+const CLAVE_CORDOBA = 'produ-blc:cordoba-sembrada';
+
+function leerMarca(clave: string): boolean {
+  try {
+    return !!window.localStorage.getItem(clave);
+  } catch {
+    return false;
+  }
+}
+function ponerMarca(clave: string): void {
+  try {
+    window.localStorage.setItem(clave, new Date().toISOString());
+  } catch {
+    /* sin storage */
+  }
+}
 
 /** La primera vez que se entra a la nube desde un dispositivo, sube las fechas que había en el navegador. */
 async function migrarLocal(): Promise<number> {
@@ -142,10 +158,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     let vivo = true;
     (async () => {
       try {
-        // base vacía (primera vez): sembramos la fecha de ejemplo de Córdoba
-        if (await repositorio().estaVacio()) await repositorio().guardar(fechaDemo()).catch(() => undefined);
         const migradas = await migrarLocal().catch(() => 0);
-        const lista = await cargarLista();
+        let lista = await cargarLista();
+        // la fecha de Córdoba queda siempre como primer registro (salvo que se haya borrado desde este dispositivo)
+        if (!lista.some((f) => f.id === DEMO_ID) && !leerMarca(CLAVE_CORDOBA)) {
+          const cordoba = fechaDemo();
+          try {
+            await repositorio().guardar(cordoba);
+            lista = [...lista, cordoba];
+          } catch (e) {
+            console.error('No pudimos cargar la fecha de Córdoba', e);
+            if (vivo) toast(`No pudimos cargar la fecha de Córdoba: ${e instanceof Error ? e.message : 'error'}`, 'error');
+          }
+        }
+        if (lista.some((f) => f.id === DEMO_ID)) ponerMarca(CLAVE_CORDOBA);
         if (!vivo) return;
         setFechas(lista);
         if (migradas) toast(`Subimos a la base ${migradas} fecha(s) que estaban en este dispositivo.`);

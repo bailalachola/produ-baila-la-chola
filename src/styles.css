@@ -2077,3 +2077,143 @@ svg {
   width: 30px;
   height: 30px;
 }
+
+/* ---------------- links ---------------- */
+
+.links {
+  display: grid;
+  gap: 14px;
+}
+.links__cat {
+  background: var(--tinta);
+  border-left: 4px solid var(--violeta);
+  padding: 12px 14px;
+  border-radius: 3px;
+}
+.links__cat.is-vacia {
+  border-left-color: var(--tinta-2);
+}
+.links__cabeza {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.links__titulo {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.links__cat .link-btn {
+  color: var(--amarillo);
+}
+.links__ayuda {
+  margin: 4px 0 0;
+  font-size: 0.86rem;
+  opacity: 0.7;
+}
+.links__lista {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: grid;
+  gap: 8px;
+}
+.link-item {
+  background: var(--papel);
+  color: var(--negro);
+  border-radius: 3px;
+  padding: 10px 12px 4px;
+}
+.link-item__a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
+  min-height: 32px;
+}
+.link-item__titulo {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--magenta);
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.link-item__tipo {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--violeta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.link-item__nota {
+  margin: 2px 0 0;
+  font-size: 0.86rem;
+  color: var(--gris);
+}
+.link-item__acciones {
+  display: flex;
+  gap: 16px;
+}
+.link-form {
+  margin: 10px 0 0;
+}
+.links__aviso {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin: 18px 0 0;
+  font-size: 0.88rem;
+  opacity: 0.8;
+}
+.links__aviso a {
+  color: var(--amarillo);
+}
+
+.docs-acceso {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 0;
+  padding: 16px;
+  text-decoration: none;
+  background: var(--violeta);
+  color: var(--blanco);
+  box-shadow: 4px 4px 0 var(--amarillo);
+  transform: rotate(-0.4deg);
+}
+.docs-acceso__icono {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  background: var(--amarillo);
+  color: var(--negro);
+  border-radius: 50%;
+}
+.docs-acceso__texto {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.docs-acceso__texto strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.docs-acceso__texto span {
+  font-size: 0.88rem;
+  opacity: 0.9;
+}
+.links__cat .link-item .link-btn {
+  color: var(--violeta);
+}
+.links__cat .link-item .link-btn--peligro {
+  color: var(--magenta-osc);
+}
