@@ -7,9 +7,10 @@ import type { SeccionId } from './model/types';
  */
 export type Ruta =
   | { nombre: 'home' }
-  | { nombre: 'nueva' }
+  | { nombre: 'nueva'; idea?: boolean }
   | { nombre: 'docs' }
   | { nombre: 'proceso' }
+  | { nombre: 'calendario' }
   | { nombre: 'fecha'; id: string; seccion: SeccionId };
 
 const SECCIONES: SeccionId[] = [
@@ -19,9 +20,10 @@ const SECCIONES: SeccionId[] = [
 
 export function parsear(hash: string): Ruta {
   const partes = hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(decodeURIComponent);
-  if (partes[0] === 'nueva') return { nombre: 'nueva' };
+  if (partes[0] === 'nueva') return { nombre: 'nueva', idea: partes[1] === 'idea' };
   if (partes[0] === 'docs') return { nombre: 'docs' };
   if (partes[0] === 'proceso') return { nombre: 'proceso' };
+  if (partes[0] === 'calendario') return { nombre: 'calendario' };
   if (partes[0] === 'fecha' && partes[1]) {
     const s = partes[2] as SeccionId | undefined;
     return { nombre: 'fecha', id: partes[1], seccion: s && SECCIONES.includes(s) ? s : 'resumen' };
@@ -34,11 +36,13 @@ export function href(r: Ruta): string {
     case 'home':
       return '#/';
     case 'nueva':
-      return '#/nueva';
+      return r.idea ? '#/nueva/idea' : '#/nueva';
     case 'docs':
       return '#/docs';
     case 'proceso':
       return '#/proceso';
+    case 'calendario':
+      return '#/calendario';
     case 'fecha':
       return `#/fecha/${encodeURIComponent(r.id)}/${r.seccion}`;
   }

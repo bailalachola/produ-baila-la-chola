@@ -2461,3 +2461,313 @@ svg {
 .guia__principios strong {
   color: var(--amarillo);
 }
+
+/* ---------------- ideas ---------------- */
+
+.portada__idea {
+  position: relative;
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  min-height: 44px;
+  margin: 14px 0 0;
+  padding: 6px 16px;
+  font-family: var(--marker);
+  font-size: 1.1rem;
+  color: var(--negro);
+  background: var(--amarillo);
+  text-decoration: none;
+  transform: rotate(1deg);
+  box-shadow: 3px 3px 0 var(--negro);
+}
+
+.card__pie--idea {
+  display: block;
+}
+.card__nota {
+  margin: 0;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--tinta-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tipo-alta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+.tipo-alta__op {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  text-align: left;
+  padding: 14px;
+  min-height: 44px;
+  border: 2px solid var(--gris);
+  border-radius: var(--radio);
+  background: transparent;
+  color: var(--crema);
+  font: inherit;
+  cursor: pointer;
+}
+.tipo-alta__op strong {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.tipo-alta__op span {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+.tipo-alta__op.is-on {
+  border-color: var(--amarillo);
+  background: var(--amarillo);
+  color: var(--negro);
+  box-shadow: 4px 4px 0 var(--magenta);
+}
+.tipo-alta__op:focus-visible {
+  outline: 3px solid var(--magenta);
+  outline-offset: 2px;
+}
+@media (max-width: 360px) {
+  .tipo-alta {
+    grid-template-columns: 1fr;
+  }
+}
+
+.idea {
+  margin: 0 0 8px;
+  padding: 18px 16px;
+  background: var(--papel);
+  color: var(--negro);
+  border-radius: var(--radio);
+  box-shadow: 4px 4px 0 var(--amarillo);
+}
+.idea__sello {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 2px 10px;
+  font-family: var(--marker);
+  background: var(--amarillo);
+  transform: rotate(-1.5deg);
+}
+.idea__texto {
+  margin: 0 0 14px;
+}
+.idea .form {
+  margin-bottom: 18px;
+}
+
+/* ---------------- orden por fecha y calendario ---------------- */
+
+.vista-toggle {
+  display: inline-flex;
+  margin: 0 0 16px;
+  border: 2px solid var(--crema);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.vista-toggle a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 6px 16px;
+  color: var(--crema);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.vista-toggle a.is-on {
+  background: var(--crema);
+  color: var(--negro);
+}
+
+.grupo + .grupo {
+  margin-top: 34px;
+}
+.grupo__titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 18px 0 10px;
+  font-family: var(--marker);
+  font-weight: 400;
+  font-size: 1.15rem;
+  color: var(--amarillo);
+}
+.grupo__titulo span {
+  font-family: var(--texto);
+  font-size: 0.85rem;
+  color: var(--crema);
+  opacity: 0.7;
+}
+
+.cal__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 10px;
+}
+.cal__nav .icon-btn {
+  color: var(--crema);
+}
+.cal__sig svg {
+  transform: rotate(180deg);
+}
+.cal__mes {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.cal__hoy {
+  margin-left: auto;
+  color: var(--amarillo);
+}
+
+.cal {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
+  margin: 0 -3px;
+  width: calc(100% + 6px);
+}
+.cal th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+  padding: 4px 0;
+}
+.cal__dia {
+  vertical-align: top;
+  height: 64px;
+  padding: 3px;
+  background: var(--tinta);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.cal__dia.is-pasado {
+  opacity: 0.6;
+}
+.cal__dia.is-hoy {
+  outline: 2px solid var(--amarillo);
+  outline-offset: -2px;
+}
+.cal__num {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin: 0 0 2px 2px;
+}
+.is-hoy .cal__num {
+  color: var(--amarillo);
+}
+.cal__ev {
+  display: block;
+  margin-top: 2px;
+  padding: 2px 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.2;
+  border-radius: 3px;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal__ev--idea {
+  background: var(--crema);
+  color: var(--negro);
+  border: 1px dashed var(--negro);
+}
+.cal__ev--produccion {
+  background: var(--amarillo);
+  color: var(--negro);
+}
+.cal__ev--confirmada {
+  background: var(--magenta);
+  color: var(--blanco);
+}
+.cal__ev--realizada {
+  background: var(--naranja);
+  color: var(--negro);
+}
+.cal__ev--cerrada {
+  background: var(--violeta);
+  color: var(--blanco);
+}
+@media (min-width: 720px) {
+  .cal__dia {
+    height: 92px;
+  }
+  .cal__ev {
+    font-size: 0.78rem;
+  }
+}
+
+.agenda-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.agenda-lista__item {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--papel);
+  color: var(--negro);
+  border-radius: var(--radio);
+  text-decoration: none;
+  box-shadow: var(--sombra-papel);
+}
+.agenda-lista__dia {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  text-transform: uppercase;
+}
+.agenda-lista__info {
+  display: grid;
+  min-width: 0;
+}
+.agenda-lista__info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.agenda-lista__info span {
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+.cal__sindia {
+  margin: 14px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.compartir-agenda__bajada {
+  margin: 0 0 6px;
+  opacity: 0.85;
+}
+.compartir-agenda .check {
+  margin: 0 0 12px;
+}
+.compartir-agenda .wa {
+  margin: 0 0 16px;
+}
