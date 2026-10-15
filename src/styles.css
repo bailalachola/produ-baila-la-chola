@@ -2261,3 +2261,203 @@ svg {
     padding-top: calc(10px + env(safe-area-inset-top, 0px));
   }
 }
+
+/* ---------------- integrador ---------------- */
+
+.integrador__acciones {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 8px;
+}
+.integrador__secundarias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.integrador__secundarias .btn {
+  flex: 1 1 140px;
+}
+.wa {
+  background: #0b141a;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 14px 14px;
+  border-radius: 6px;
+  padding: 14px 12px;
+}
+.wa__burbuja {
+  background: #005c4b;
+  color: #e9edef;
+  border-radius: 10px 0 10px 10px;
+  padding: 10px 12px;
+  margin-left: 8%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  line-height: 1.38;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.agenda {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.agenda__item {
+  display: grid;
+  grid-template-columns: 92px 1fr 44px;
+  gap: 8px;
+  align-items: center;
+}
+.integrador .input {
+  border-color: var(--crema);
+}
+.integrador__mas {
+  color: var(--amarillo);
+  margin-top: 8px;
+}
+
+/* ---------------- instructivo: cómo producimos ---------------- */
+
+.docs-acceso--guia {
+  background: var(--magenta);
+  box-shadow: 4px 4px 0 var(--crema);
+  transform: rotate(0.4deg);
+}
+.docs-acceso--guia + .docs-acceso {
+  margin-top: 16px;
+}
+
+.guia__ciclo {
+  list-style: none;
+  margin: 6px 0 8px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 4px;
+}
+.guia__ciclo li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.guia__flecha {
+  color: var(--amarillo);
+  font-weight: 700;
+}
+
+.guia__etapa {
+  margin: 34px 0 0;
+}
+.guia__etapa-titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 0 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--amarillo);
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.guia__estado {
+  font-family: var(--marker);
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--amarillo);
+}
+
+.guia__pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.guia__paso {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.guia__num {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--amarillo);
+  color: var(--negro);
+  font-family: var(--display);
+  font-size: 1.3rem;
+}
+.guia__cuerpo {
+  background: var(--papel);
+  color: var(--negro);
+  padding: 14px 16px;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-papel);
+  min-width: 0;
+}
+.guia__momento {
+  margin: 0;
+  font-family: var(--marker);
+  color: var(--magenta-osc);
+  font-size: 0.92rem;
+}
+.guia__titulo {
+  margin: 2px 0 6px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.guia__texto {
+  margin: 0;
+}
+.guia__donde {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 0;
+}
+.guia__donde .tag {
+  background: var(--violeta);
+  color: var(--blanco);
+}
+.guia__tips {
+  margin: 10px 0 0;
+  padding: 10px 12px 10px 28px;
+  background: var(--naranja-claro);
+  border-left: 4px solid var(--naranja);
+  font-size: 0.92rem;
+}
+.guia__tips li + li {
+  margin-top: 4px;
+}
+
+.guia__principios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.guia__principios li {
+  display: grid;
+  gap: 2px;
+  padding: 10px 14px;
+  border-left: 4px solid var(--magenta);
+  background: var(--tinta);
+}
+.guia__principios strong {
+  color: var(--amarillo);
+}
