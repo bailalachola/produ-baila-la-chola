@@ -1,4 +1,5 @@
 import type { Integrador } from './integrador';
+import type { Quorum } from './quorum';
 
 /**
  * MODELO DE DATOS DE LA PRODU
@@ -260,6 +261,8 @@ export interface Fecha {
   links: Link[];
   /** mensaje de WhatsApp para el grupo (si no existe, se sugiere desde el checklist) */
   integrador?: Integrador;
+  /** encuesta a la murga para saber si vamos */
+  quorum?: Quorum;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
