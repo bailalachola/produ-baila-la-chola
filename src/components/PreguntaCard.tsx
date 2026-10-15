@@ -126,6 +126,8 @@ export function PreguntaCard({ pregunta: p, respuesta, onChange, seguimiento, an
         </div>
       )}
 
+      {p.tipo === 'varios' && <Varios pregunta={p} valor={r.valor} onChange={(valor) => set({ valor, estado: undefined })} />}
+
       <div className="pregunta__pie">
         {p.tipo !== 'sino' && (
           <>
@@ -205,5 +207,52 @@ export function PreguntaCard({ pregunta: p, respuesta, onChange, seguimiento, an
         </div>
       )}
     </article>
+  );
+}
+
+/** Elegir varias: se guarda como "Luz, Espejos". La opción "ninguna" es excluyente. */
+function Varios({ pregunta: p, valor, onChange }: { pregunta: Pregunta; valor?: string; onChange: (v: string | undefined) => void }) {
+  const elegidas = (valor ?? '')
+    .split(',')
+    .map((x) => x.trim())
+    .filter(Boolean);
+  const opciones = [...(p.opciones ?? []), ...(p.ninguna ? [p.ninguna] : [])];
+  const toggle = (o: string) => {
+    let nuevas: string[];
+    if (o === p.ninguna) nuevas = elegidas.includes(o) ? [] : [o];
+    else {
+      const sin = elegidas.filter((x) => x !== p.ninguna);
+      nuevas = sin.includes(o) ? sin.filter((x) => x !== o) : [...sin, o];
+      // respetar el orden de las opciones
+      nuevas = (p.opciones ?? []).filter((x) => nuevas.includes(x));
+    }
+    onChange(nuevas.length ? nuevas.join(', ') : undefined);
+  };
+  const faltan = elegidas.length ? (p.opciones ?? []).filter((o) => !elegidas.includes(o)) : [];
+  return (
+    <>
+      <div className="opciones" role="group" aria-label={p.label}>
+        {opciones.map((o) => (
+          <button
+            key={o}
+            type="button"
+            className={`chip ${elegidas.includes(o) ? 'is-on' : ''}`}
+            aria-pressed={elegidas.includes(o)}
+            onClick={() => toggle(o)}
+          >
+            {o !== p.ninguna && elegidas.includes(o) ? '✓ ' : ''}
+            {o}
+          </button>
+        ))}
+      </div>
+      {faltan.length > 0 && (
+        <p className="varios__falta">
+          Falta: {faltan.join(', ').toLowerCase()}. Anotalo para llevarlo o pedirlo.
+        </p>
+      )}
+      {faltan.length === 0 && elegidas.length > 0 && !elegidas.includes(p.ninguna ?? '') && (
+        <p className="varios__ok">Tiene todo lo ideal 🙌</p>
+      )}
+    </>
   );
 }
