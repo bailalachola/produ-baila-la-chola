@@ -70,6 +70,7 @@ export type SeccionId =
   | 'pendientes'
   | SeccionChecklistId
   | 'economia'
+  | 'links'
   | 'updates'
   | 'cierre';
 
@@ -250,6 +251,8 @@ export interface Fecha {
   updates: Update[];
   riesgos: Riesgo[];
   relato: Partial<Record<RelatoId, string>>;
+  /** links de Drive y otros: fotos, prensa, rider… */
+  links: Link[];
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
@@ -260,3 +263,39 @@ export type NuevaFechaInput = Pick<
   Fecha,
   'nombre' | 'fecha' | 'lugar' | 'responsable' | 'contacto' | 'tipo'
 >;
+
+/* ---------- links (por fecha y documentación general) ---------- */
+
+export interface Link {
+  id: string;
+  titulo: string;
+  url: string;
+  categoria: string;
+  nota?: string;
+}
+
+export interface CategoriaLink {
+  id: string;
+  label: string;
+  ayuda: string;
+}
+
+/** Links de una fecha */
+export const CATEGORIAS_LINK_FECHA: CategoriaLink[] = [
+  { id: 'fotos', label: 'Fotos y video de la fecha', ayuda: 'El Drive donde subimos el registro.' },
+  { id: 'prensa_recibida', label: 'Prensa que nos pasaron', ayuda: 'Notas, entrevistas, posteos de otras cuentas.' },
+  { id: 'prensa_propia', label: 'Nuestra prensa: dónde la alojamos', ayuda: 'Carpeta de Drive con gacetilla, flyer, textos y fotos de prensa propios.' },
+  { id: 'tecnica', label: 'Rider y técnica', ayuda: 'El rider que mandamos, planos de escenario, fichas técnicas.' },
+  { id: 'produccion', label: 'Producción y logística', ayuda: 'Planillas, contratos, cronogramas, mapas.' },
+  { id: 'otros', label: 'Otros', ayuda: '' },
+];
+
+/** Documentación y accesos generales de la murga (no de una fecha) */
+export const CATEGORIAS_DOCUMENTOS: CategoriaLink[] = [
+  { id: 'tecnica', label: 'Riders y técnica', ayuda: 'Rider de sonido, plano de escenario, input list.' },
+  { id: 'drive', label: 'Drives y carpetas', ayuda: 'Fotos, videos, archivo, prensa.' },
+  { id: 'prensa', label: 'Prensa y difusión', ayuda: 'Gacetillas, kit de prensa, logos, flyers base.' },
+  { id: 'accesos', label: 'Accesos y cuentas', ayuda: 'Dónde están las cosas y quién tiene acceso. No guardes contraseñas acá.' },
+  { id: 'produccion', label: 'Producción', ayuda: 'Planillas, modelos de contrato, presupuestos.' },
+  { id: 'otros', label: 'Otros', ayuda: '' },
+];

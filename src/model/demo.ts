@@ -9,7 +9,7 @@ import { esVisible, estaRespondida } from './logic';
  */
 export const DEMO_ID = 'demo_encuentro_cordoba';
 /** subir este número cuando cambie la demo: se actualiza sola en los navegadores */
-export const DEMO_VERSION = 3;
+export const DEMO_VERSION = 4;
 
 export function fechaDemo(): Fecha {
   const f = fechaDemoBase();
@@ -160,6 +160,22 @@ En este caso, la ausencia de prueba fue un riesgo aceptado; la cantidad mínima 
     },
 
     pendientes: [],
+
+    links: [
+      {
+        id: 'link_cba_fotos',
+        titulo: 'Fotos del Encuentro',
+        url: 'https://drive.google.com/drive/folders/1K6ZJfMBe6D9Y_uAmS1ZwrTEtlciniiIq?usp=sharing',
+        categoria: 'fotos',
+      },
+      {
+        id: 'link_cba_rider',
+        titulo: 'Rider de sonido',
+        url: 'https://docs.google.com/document/d/12iJExLoF7lcMqNx8ltsgyUWpKG7so_Lx502vAiV14jQ/edit?tab=t.0',
+        categoria: 'tecnica',
+        nota: 'Mínimo negociado: 7 micrófonos para voces.',
+      },
+    ],
 
     movimientos: [
       {

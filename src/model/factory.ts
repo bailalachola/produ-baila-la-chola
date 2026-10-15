@@ -37,6 +37,7 @@ export function crearFecha(input: NuevaFechaInput): Fecha {
     ],
     riesgos: [],
     relato: {},
+    links: [],
     cierre: cierreVacio(),
   };
 }
@@ -62,6 +63,7 @@ export function normalizarFecha(raw: Partial<Fecha> & { id: string }): Fecha {
     updates: raw.updates ?? [],
     riesgos: raw.riesgos ?? [],
     relato: raw.relato ?? {},
+    links: raw.links ?? [],
     cierre: { ...cierreVacio(), ...(raw.cierre ?? {}) },
   };
 }
