@@ -1,5 +1,6 @@
 import type { Integrador } from './integrador';
 import type { Quorum } from './quorum';
+import type { Actividad } from './actividad';
 
 /**
  * MODELO DE DATOS DE LA PRODU
@@ -267,6 +268,8 @@ export interface Fecha {
   ultimoReporte?: ISODateTime;
   /** borrador del update al grupo, si se editó a mano */
   reporteBorrador?: string;
+  /** quién hizo qué (la campanita de novedades) */
+  actividad?: Actividad[];
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
