@@ -6,6 +6,7 @@ import { FechaView } from './views/FechaView';
 import { DocsView } from './views/DocsView';
 import { GuiaView } from './views/GuiaView';
 import { CalendarioView } from './views/CalendarioView';
+import { NovedadesView } from './views/NovedadesView';
 import { Marca } from './components/ui';
 
 export function App() {
@@ -32,6 +33,7 @@ export function App() {
       {ruta.nombre === 'docs' && <DocsView />}
       {ruta.nombre === 'proceso' && <GuiaView />}
       {ruta.nombre === 'calendario' && <CalendarioView />}
+      {ruta.nombre === 'novedades' && <NovedadesView key={ruta.fecha ?? 'todas'} fechaId={ruta.fecha} />}
       {ruta.nombre === 'fecha' && <FechaView id={ruta.id} seccion={ruta.seccion} />}
     </>
   );

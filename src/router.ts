@@ -11,6 +11,7 @@ export type Ruta =
   | { nombre: 'docs' }
   | { nombre: 'proceso' }
   | { nombre: 'calendario' }
+  | { nombre: 'novedades'; fecha?: string }
   | { nombre: 'fecha'; id: string; seccion: SeccionId };
 
 const SECCIONES: SeccionId[] = [
@@ -24,6 +25,7 @@ export function parsear(hash: string): Ruta {
   if (partes[0] === 'docs') return { nombre: 'docs' };
   if (partes[0] === 'proceso') return { nombre: 'proceso' };
   if (partes[0] === 'calendario') return { nombre: 'calendario' };
+  if (partes[0] === 'novedades') return { nombre: 'novedades', fecha: partes[1] };
   if (partes[0] === 'fecha' && partes[1]) {
     const s = partes[2] as SeccionId | undefined;
     return { nombre: 'fecha', id: partes[1], seccion: s && SECCIONES.includes(s) ? s : 'resumen' };
@@ -43,6 +45,8 @@ export function href(r: Ruta): string {
       return '#/proceso';
     case 'calendario':
       return '#/calendario';
+    case 'novedades':
+      return r.fecha ? `#/novedades/${encodeURIComponent(r.fecha)}` : '#/novedades';
     case 'fecha':
       return `#/fecha/${encodeURIComponent(r.id)}/${r.seccion}`;
   }

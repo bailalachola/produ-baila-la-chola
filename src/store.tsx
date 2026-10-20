@@ -3,6 +3,8 @@ import type { Fecha, NuevaFechaInput } from './model/types';
 import { ahora, crearFecha } from './model/factory';
 import { DEMO_ID, DEMO_VERSION, completarConNoAplica, fechaDemo } from './model/demo';
 import { progresoGeneral } from './model/logic';
+import { actividadInicial, nombreCorto, registrarActividad } from './model/actividad';
+import { useSesion } from './components/Acceso';
 import { CLAVE_LOCAL, LocalStorageRepository, repositorio } from './services/repository';
 import { SinConexion } from './services/supabaseRepository';
 import { useToast } from './components/Toast';
@@ -79,6 +81,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [guardado, setGuardado] = useState<EstadoGuardado>('ok');
   const toast = useToast();
+  const sesion = useSesion();
+  // quién está usando la app, para las novedades
+  const autorRef = useRef('Vos');
+  autorRef.current = sesion.modo === 'nube' ? nombreCorto(sesion.nombre, sesion.email) : 'Vos';
   const fechasRef = useRef(fechas);
   fechasRef.current = fechas;
   const remoto = repositorio().remoto;
@@ -246,7 +252,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const crear = useCallback(
     (input: NuevaFechaInput) => {
-      const f = crearFecha(input);
+      const base = crearFecha(input);
+      const f = { ...base, actividad: [actividadInicial(base, autorRef.current)] };
       fechasRef.current = [...fechasRef.current, f];
       setFechas(fechasRef.current);
       persistir(f, true);
@@ -259,7 +266,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (id: string, cambio: (f: Fecha) => Fecha) => {
       const actual = fechasRef.current.find((f) => f.id === id);
       if (!actual) return;
-      const nueva = { ...cambio(actual), actualizada: ahora() };
+      const nueva = registrarActividad(actual, { ...cambio(actual), actualizada: ahora() }, autorRef.current);
       const lista = fechasRef.current.map((f) => (f.id === id ? nueva : f));
       fechasRef.current = lista;
       setFechas(lista);
