@@ -263,6 +263,10 @@ export interface Fecha {
   integrador?: Integrador;
   /** encuesta a la murga para saber si vamos */
   quorum?: Quorum;
+  /** cuándo se mandó el último update al grupo (para marcar lo nuevo) */
+  ultimoReporte?: ISODateTime;
+  /** borrador del update al grupo, si se editó a mano */
+  reporteBorrador?: string;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
