@@ -3241,3 +3241,14 @@ svg {
   opacity: 0.65;
   font-size: 0.82rem;
 }
+
+.novedad--mejora .novedad__inicial {
+  background: var(--amarillo);
+  font-size: 1rem;
+}
+.novedad--mejora .novedad__cuerpo {
+  border-left-color: var(--amarillo);
+}
+.novedad--mejora.is-nueva .novedad__inicial {
+  background: var(--amarillo);
+}
