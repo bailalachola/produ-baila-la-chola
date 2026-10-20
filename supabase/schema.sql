@@ -94,6 +94,8 @@ create policy "miembros actualizan suscripciones" on public.suscripciones
   for update to authenticated using (public.es_miembro()) with check (public.es_miembro());
 create policy "miembros borran suscripciones" on public.suscripciones
   for delete to authenticated using (public.es_miembro());
+grant select, insert, update, delete on public.suscripciones to authenticated;
+grant select, insert, update, delete on public.suscripciones to service_role;
 
 -- Aviso diario a las 9:00 de Buenos Aires (12:00 UTC).
 -- Reemplazá TU_SECRETO por el mismo valor que AVISOS_SECRETO de la función.
