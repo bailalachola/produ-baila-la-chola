@@ -67,3 +67,42 @@ insert into public.miembros (email, nombre) values
   ('clarastreger@gmail.com', 'Clari'),
   ('perriantonnella@gmail.com', 'Anto'),
   ('marianabrusse.clases@gmail.com', 'Marian');
+
+-- =====================================================================
+-- AVISOS AL CELU (notificaciones push)
+-- Cada dispositivo que activa los avisos queda guardado acá.
+-- La función "avisos" (supabase/functions/avisos) los lee con la clave de servicio.
+-- =====================================================================
+create table if not exists public.suscripciones (
+  endpoint text primary key,
+  p256dh   text not null,
+  auth     text not null,
+  email    text,
+  creada   timestamptz not null default now()
+);
+alter table public.suscripciones enable row level security;
+
+drop policy if exists "miembros ven suscripciones" on public.suscripciones;
+drop policy if exists "miembros suscriben" on public.suscripciones;
+drop policy if exists "miembros actualizan suscripciones" on public.suscripciones;
+drop policy if exists "miembros borran suscripciones" on public.suscripciones;
+create policy "miembros ven suscripciones" on public.suscripciones
+  for select to authenticated using (public.es_miembro());
+create policy "miembros suscriben" on public.suscripciones
+  for insert to authenticated with check (public.es_miembro());
+create policy "miembros actualizan suscripciones" on public.suscripciones
+  for update to authenticated using (public.es_miembro()) with check (public.es_miembro());
+create policy "miembros borran suscripciones" on public.suscripciones
+  for delete to authenticated using (public.es_miembro());
+
+-- Aviso diario a las 9:00 de Buenos Aires (12:00 UTC).
+-- Reemplazá TU_SECRETO por el mismo valor que AVISOS_SECRETO de la función.
+-- create extension if not exists pg_cron;
+-- create extension if not exists pg_net;
+-- select cron.schedule('la-produ-avisos', '0 12 * * *', $$
+--   select net.http_post(
+--     url     := 'https://ljnjoyjdcfrkemlagcxv.supabase.co/functions/v1/avisos',
+--     headers := '{"Content-Type": "application/json", "x-avisos-secreto": "TU_SECRETO"}'::jsonb,
+--     body    := '{}'::jsonb
+--   );
+-- $$);
