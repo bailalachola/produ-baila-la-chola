@@ -1,5 +1,7 @@
 import { PREGUNTAS_POR_ID, seccionLabel } from './checklist';
 import { formatoMonto } from './logic';
+import { MEJORAS } from './mejoras';
+import type { Ruta } from '../router';
 import { ESTADO_LABEL, ESTADO4_LABEL, type Fecha, type Respuesta, type SeccionId } from './types';
 
 /**
@@ -193,16 +195,30 @@ export function actividadInicial(f: Fecha, autor: string): Actividad {
 }
 
 export interface NovedadVista extends Actividad {
-  fechaId: string;
-  fechaNombre: string;
+  fechaId?: string;
+  fechaNombre?: string;
+  /** mejora de la app (no de una fecha) */
+  mejora?: boolean;
+  ir?: Ruta;
 }
 
-/** Todas las novedades, de la más nueva a la más vieja */
+/** Todas las novedades (de las fechas y, sin filtro de fecha, las mejoras de la app), de la más nueva a la más vieja */
 export function todasLasNovedades(fechas: Fecha[], fechaId?: string): NovedadVista[] {
-  return fechas
+  const deFechas: NovedadVista[] = fechas
     .filter((f) => !fechaId || f.id === fechaId)
-    .flatMap((f) => (f.actividad ?? []).map((a) => ({ ...a, fechaId: f.id, fechaNombre: f.nombre })))
-    .sort((a, b) => b.cuando.localeCompare(a.cuando));
+    .flatMap((f) => (f.actividad ?? []).map((a) => ({ ...a, fechaId: f.id, fechaNombre: f.nombre })));
+  const mejoras: NovedadVista[] = fechaId
+    ? []
+    : MEJORAS.map((m, i) => ({
+        id: `mejora-${i}-${m.cuando}`,
+        cuando: new Date(m.cuando).toISOString(),
+        autor: m.autor,
+        clave: 'mejora',
+        texto: m.texto,
+        mejora: true,
+        ir: m.ir,
+      }));
+  return [...deFechas, ...mejoras].sort((a, b) => b.cuando.localeCompare(a.cuando));
 }
 
 /** Nombre corto para mostrar: "Cou Infante" → "Cou"; sin nombre, la parte antes de la @ */
