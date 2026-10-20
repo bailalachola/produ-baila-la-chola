@@ -105,17 +105,26 @@ export function NovedadesView({ fechaId }: { fechaId?: string }) {
                 {g.items.map((n) => {
                   const nueva = n.autor !== yo && (!vistasAlEntrar || n.cuando > vistasAlEntrar);
                   return (
-                    <li key={`${n.fechaId}-${n.id}`} className={`novedad ${nueva ? 'is-nueva' : ''}`}>
+                    <li key={`${n.fechaId ?? 'app'}-${n.id}`} className={`novedad ${nueva ? 'is-nueva' : ''} ${n.mejora ? 'novedad--mejora' : ''}`}>
                       <span className="novedad__inicial" aria-hidden="true">
-                        {n.autor.charAt(0).toUpperCase()}
+                        {n.mejora ? '✨' : n.autor.charAt(0).toUpperCase()}
                       </span>
-                      <a className="novedad__cuerpo" href={href({ nombre: 'fecha', id: n.fechaId, seccion: n.seccion ?? 'resumen' })}>
+                      <a
+                        className="novedad__cuerpo"
+                        href={
+                          n.ir
+                            ? href(n.ir)
+                            : n.fechaId
+                              ? href({ nombre: 'fecha', id: n.fechaId, seccion: n.seccion ?? 'resumen' })
+                              : href({ nombre: 'novedades' })
+                        }
+                      >
                         <span className="novedad__texto">
-                          <strong>{n.autor === yo ? 'Vos' : n.autor}</strong> {n.texto}
+                          <strong>{n.autor}</strong> {n.texto}
                         </span>
                         <span className="novedad__meta">
                           {hora(n.cuando)}
-                          {!fechaId && <> · {n.fechaNombre}</>}
+                          {n.mejora ? <> · Mejora de La Produ</> : !fechaId && <> · {n.fechaNombre}</>}
                         </span>
                       </a>
                     </li>
