@@ -32,3 +32,11 @@ function dentroDeArtifact(): boolean {
 }
 
 export const NUBE_ACTIVA = !!SUPABASE_URL && !!SUPABASE_KEY && !dentroDeArtifact();
+
+/**
+ * AVISOS AL CELU (notificaciones push)
+ * Clave pública VAPID: va en la página, es pública por diseño.
+ * La privada va SOLO en los secretos de la función de Supabase.
+ */
+export const VAPID_PUBLIC_KEY: string =
+  import.meta.env.VITE_VAPID_PUBLIC_KEY ?? 'BASxqr02cESE1M1BsilQmUbJnzNnkAgXG6_J30dGJsViabxEdlktbG4y9p9toGszk-FuqGww3ljUsShCiDq9C5Y';
