@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Campanita } from '../components/Campanita';
 import { useStore } from '../store';
 import { href } from '../router';
 import { SECCIONES_NAV, getSeccion } from '../model/checklist';
@@ -53,6 +54,7 @@ export function FechaView({ id, seccion }: { id: string; seccion: SeccionId }) {
           </a>
           <span className="cabecera__marca">LA PRODU</span>
           <EstadoGuardado />
+          <Campanita />
           <button
             type="button"
             className="btn btn--pdf"

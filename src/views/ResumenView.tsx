@@ -1,7 +1,7 @@
 import { useStore } from '../store';
 import { href, ir } from '../router';
 import { CHECKLIST, seccionLabel } from '../model/checklist';
-import { faltantesCriticos, pendientesAbiertos, progresoSeccion } from '../model/logic';
+import { faltantesCriticos, fechaHora, pendientesAbiertos, progresoSeccion } from '../model/logic';
 import { ESTADOS, ESTADO_LABEL, RELATO_PREVIO, TIPOS_FECHA, type Fecha } from '../model/types';
 import { RelatoCampos } from '../components/RelatoCampos';
 import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
@@ -223,6 +223,8 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
         <RiesgosEditor fecha={fecha} />
       </div>
 
+      <UltimasNovedades fecha={fecha} />
+
       <div className="acciones-finales">
         {!esIdea && fecha.estado !== 'cerrada' && fecha.estado !== 'realizada' && (
           <a className="btn btn--mega btn--block btn--alt" href={href({ nombre: 'fecha', id: fecha.id, seccion: 'integrador' })}>
@@ -242,5 +244,26 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
         </button>
       </div>
     </section>
+  );
+}
+
+function UltimasNovedades({ fecha }: { fecha: Fecha }) {
+  const ultimas = (fecha.actividad ?? []).slice(0, 4);
+  if (!ultimas.length) return null;
+  return (
+    <div className="bloque">
+      <h3 className="bloque__titulo">Últimas novedades</h3>
+      <ul className="ultimas">
+        {ultimas.map((a) => (
+          <li key={a.id}>
+            <strong>{a.autor}</strong> {a.texto}
+            <span className="ultimas__cuando"> · {fechaHora(a.cuando)}</span>
+          </li>
+        ))}
+      </ul>
+      <a className="link-btn" href={href({ nombre: 'novedades', fecha: fecha.id })}>
+        Ver todo lo que se hizo en esta fecha →
+      </a>
+    </div>
   );
 }

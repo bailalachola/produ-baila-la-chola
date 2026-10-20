@@ -13,6 +13,7 @@ import { exportarPlanilla } from '../services/planilla';
 import { BotonInstalar } from '../components/BotonInstalar';
 import { VistaToggle } from '../components/VistaToggle';
 import { BotonAvisos } from '../components/BotonAvisos';
+import { Campanita } from '../components/Campanita';
 import { agruparPorFecha } from '../model/agenda';
 import { estadoQuorum } from '../model/quorum';
 
@@ -82,6 +83,7 @@ export function HomeView() {
     <div className="home">
       <header className="portada">
         <div className="portada__papel" aria-hidden="true" />
+        <Campanita className="campanita--portada" />
         <span className="portada__estrella portada__estrella--1" aria-hidden="true">
           <Icon name="star" size={34} />
         </span>
