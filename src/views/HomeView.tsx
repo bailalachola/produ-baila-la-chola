@@ -12,6 +12,7 @@ import { EstadoGuardado } from '../components/EstadoGuardado';
 import { exportarPlanilla } from '../services/planilla';
 import { BotonInstalar } from '../components/BotonInstalar';
 import { VistaToggle } from '../components/VistaToggle';
+import { BotonAvisos } from '../components/BotonAvisos';
 import { agruparPorFecha } from '../model/agenda';
 import { estadoQuorum } from '../model/quorum';
 
@@ -160,6 +161,8 @@ export function HomeView() {
           </span>
           <Icon name="arrow" />
         </a>
+
+        <BotonAvisos />
 
         <section className="backup" aria-labelledby="backup-t">
           <div className="backup__cabeza">

@@ -90,7 +90,10 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         texto:
           'Decisiones, cambios y novedades van como Update, con tema y momento. Cada uno se copia listo para pegar en el grupo de WhatsApp.',
         donde: ['Updates'],
-        tips: ['Si se decidió en el grupo, igual lo pasamos acá: es la memoria de la fecha.'],
+        tips: [
+          'Si se decidió en el grupo, igual lo pasamos acá: es la memoria de la fecha.',
+          'Cada tanto, “Update de la fecha para el grupo” arma el resumen con lo que ya está, lo que falta y los próximos pasos.',
+        ],
       },
       {
         momento: 'Cuando hay plata en juego',

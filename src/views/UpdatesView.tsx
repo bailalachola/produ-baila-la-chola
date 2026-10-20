@@ -7,6 +7,7 @@ import { Icon, Input, TextArea, TituloSeccion, Vacio } from '../components/ui';
 import { useConfirmar } from '../components/Dialog';
 import { useToast } from '../components/Toast';
 import { copiar } from '../lib/clipboard';
+import { ReporteGrupo } from '../components/ReporteGrupo';
 
 const EMOJI: Record<CategoriaUpdate, string> = {
   DECISIÓN: '✊',
@@ -73,6 +74,10 @@ export function UpdatesView({ fecha }: { fecha: Fecha }) {
   return (
     <section>
       <TituloSeccion bajada="La memoria de la fecha: qué se decidió, qué cambió, qué se resolvió.">Updates</TituloSeccion>
+
+      {fecha.estado !== 'idea' && fecha.estado !== 'cerrada' && <ReporteGrupo fecha={fecha} />}
+
+      <h3 className="bloque__titulo updates__registrar">Registrar un update</h3>
 
       <form className="panel form" onSubmit={onSubmit}>
         <div className="opciones" role="group" aria-label="Categoría">

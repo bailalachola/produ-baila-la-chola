@@ -229,6 +229,11 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
             <Icon name="copy" size={24} /> Armar integrador
           </a>
         )}
+        {!esIdea && fecha.estado !== 'cerrada' && (
+          <a className="btn btn--secundario btn--block" href={href({ nombre: 'fecha', id: fecha.id, seccion: 'updates' })}>
+            🟢 Armar update para el grupo
+          </a>
+        )}
         <button type="button" className="btn btn--mega btn--block" onClick={() => generar(fecha)} disabled={generando}>
           <Icon name="pdf" size={24} /> {generando ? 'Armando la bitácora…' : 'Generar bitácora'}
         </button>
