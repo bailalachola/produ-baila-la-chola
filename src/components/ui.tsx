@@ -19,6 +19,7 @@ const paths = {
   flag: 'M5 21V4m0 0h11l-2 4 2 4H5',
   close: 'M6 6l12 12M18 6L6 18',
   map: 'M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14',
+  bell: 'M6 9a6 6 0 1112 0c0 6 2.5 8 2.5 8h-17S6 15 6 9zM10 20.5a2.2 2.2 0 004 0',
 } as const;
 
 export type IconName = keyof typeof paths;
