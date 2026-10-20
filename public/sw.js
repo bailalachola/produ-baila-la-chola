@@ -64,3 +64,36 @@ self.addEventListener('fetch', (event) => {
     );
   }
 });
+
+/* ---------------- avisos al celu ---------------- */
+
+self.addEventListener('push', (event) => {
+  let aviso = { titulo: 'La Produ', cuerpo: '', url: BASE, tag: 'la-produ' };
+  try {
+    aviso = { ...aviso, ...event.data.json() };
+  } catch {
+    if (event.data) aviso.cuerpo = event.data.text();
+  }
+  event.waitUntil(
+    self.registration.showNotification(aviso.titulo, {
+      body: aviso.cuerpo,
+      tag: aviso.tag,
+      icon: `${BASE}icon-192.png`,
+      badge: `${BASE}icon-192.png`,
+      data: { url: aviso.url },
+    }),
+  );
+});
+
+// tocar el aviso abre La Produ en la pantalla que corresponde
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || BASE;
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((ventanas) => {
+      const abierta = ventanas.find((v) => new URL(v.url).pathname.startsWith(BASE));
+      if (abierta) return abierta.navigate(url).then((v) => (v || abierta).focus());
+      return self.clients.openWindow(url);
+    }),
+  );
+});
