@@ -74,8 +74,12 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         titulo: 'Articulamos con las comisiones',
         texto:
           'Artístico (repertorio, orden, duración), Vestuario y Maquillaje, y Difusión tienen su sección. Cada pregunta puede tener responsable y fecha límite.',
-        donde: ['Artístico', 'Vestuario / Maquillaje', 'Difusión'],
-        tips: ['Comi Arti: repertorio y orden de canciones.', 'Comi Maqui: propuesta de maquillaje.'],
+        donde: ['Artístico', 'Vestuario / Maquillaje', 'Ensayos', 'Difusión'],
+        tips: [
+          'Comi Arti: repertorio y orden de canciones.',
+          'Comi Maqui: propuesta de maquillaje.',
+          'Si la fecha pide ensayos aparte (otro lugar, otro día), se producen en la sección Ensayos: lugar, horario, traslado, qué llevar y mensaje para el grupo.',
+        ],
       },
       {
         momento: 'Todo el tiempo',

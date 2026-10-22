@@ -14,7 +14,7 @@ import { useConfirmar } from '../components/Dialog';
 import { copiar } from '../lib/clipboard';
 
 /** *negrita* y _cursiva_ como en WhatsApp, para la vista previa */
-function FormatoWhatsApp({ texto }: { texto: string }) {
+export function FormatoWhatsApp({ texto }: { texto: string }) {
   const partes = texto.split(/(\*[^*\n]+\*|_[^_\n]+_)/g);
   return (
     <>

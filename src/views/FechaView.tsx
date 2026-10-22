@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { EnsayosView } from './EnsayosView';
 import { Campanita } from '../components/Campanita';
 import { useStore } from '../store';
 import { href } from '../router';
@@ -141,6 +142,8 @@ function Contenido({ fecha, seccion }: { fecha: Fecha; seccion: SeccionId }) {
       return <LinksView fecha={fecha} />;
     case 'integrador':
       return <IntegradorView fecha={fecha} />;
+    case 'ensayos':
+      return <EnsayosView fecha={fecha} />;
     default: {
       const s = getSeccion(seccion);
       return s ? <ChecklistView fecha={fecha} seccion={s} /> : null;

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ESTADO_ENSAYO_LABEL, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
 import { useStore } from '../store';
 import { href } from '../router';
 import type { Fecha } from '../model/types';
@@ -9,6 +10,18 @@ import { useToast } from '../components/Toast';
 import { copiar } from '../lib/clipboard';
 import { descargarArchivo } from '../services/backup';
 import { VistaToggle } from '../components/VistaToggle';
+
+interface ItemCal {
+  key: string;
+  dia: string;
+  nombre: string;
+  lugar?: string;
+  href: string;
+  /** si es una fecha */
+  fecha?: Fecha;
+  /** si es un ensayo: su estado */
+  ensayo?: string;
+}
 
 const DIAS = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'];
 
@@ -21,18 +34,35 @@ export function CalendarioView() {
   const [conProduccion, setConProduccion] = useState(true);
   const hoy = hoyISO();
 
-  const porDia = useMemo(() => {
-    const m = new Map<string, Fecha[]>();
+  // fechas y ensayos, todo junto en el calendario
+  const items = useMemo<ItemCal[]>(() => {
+    const out: ItemCal[] = [];
     for (const f of fechas) {
-      if (!f.fecha) continue;
-      m.set(f.fecha, [...(m.get(f.fecha) ?? []), f]);
+      if (f.fecha) out.push({ key: f.id, dia: f.fecha, nombre: f.nombre, lugar: f.lugar, href: href({ nombre: 'fecha', id: f.id, seccion: 'resumen' }), fecha: f });
+      for (const e of f.ensayos ?? []) {
+        if (!e.dia || e.estado === 'cancelado') continue;
+        out.push({
+          key: `${f.id}-${e.id}`,
+          dia: e.dia,
+          nombre: `🥁 ${nombreEnsayo(e)}`,
+          lugar: [horarioEnsayo(e), e.lugar, `para ${f.nombre}`].filter(Boolean).join(' · '),
+          href: href({ nombre: 'fecha', id: f.id, seccion: 'ensayos' }),
+          ensayo: ESTADO_ENSAYO_LABEL[e.estado],
+        });
+      }
     }
-    return m;
+    return out.sort((a, b) => a.dia.localeCompare(b.dia));
   }, [fechas]);
+
+  const porDia = useMemo(() => {
+    const m = new Map<string, ItemCal[]>();
+    for (const it of items) m.set(it.dia, [...(m.get(it.dia) ?? []), it]);
+    return m;
+  }, [items]);
 
   const semanas = grillaMes(anio, mes);
   const prefijo = `${anio}-${String(mes + 1).padStart(2, '0')}-`;
-  const delMes = fechas.filter((f) => f.fecha?.startsWith(prefijo)).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  const delMes = items.filter((it) => it.dia.startsWith(prefijo));
   const sinDia = fechas.filter((f) => !f.fecha && f.estado !== 'cerrada' && f.estado !== 'realizada');
 
   const lista = comprometidas(fechas, conProduccion, hoy);
@@ -115,14 +145,14 @@ export function CalendarioView() {
                   return (
                     <td key={j} className={`cal__dia ${dia === hoy ? 'is-hoy' : ''} ${dia < hoy ? 'is-pasado' : ''}`}>
                       <span className="cal__num">{Number(dia.slice(8))}</span>
-                      {delDia.map((f) => (
+                      {delDia.map((it) => (
                         <a
-                          key={f.id}
-                          className={`cal__ev cal__ev--${f.estado}`}
-                          href={href({ nombre: 'fecha', id: f.id, seccion: 'resumen' })}
-                          title={f.nombre}
+                          key={it.key}
+                          className={`cal__ev cal__ev--${it.fecha ? it.fecha.estado : 'ensayo'}`}
+                          href={it.href}
+                          title={it.nombre}
                         >
-                          {f.nombre}
+                          {it.nombre}
                         </a>
                       ))}
                     </td>
@@ -136,18 +166,18 @@ export function CalendarioView() {
         <div className="bloque">
           <h3 className="bloque__titulo">En {MESES_LARGO[mes]}</h3>
           {delMes.length === 0 ? (
-            <Vacio>No hay fechas este mes.</Vacio>
+            <Vacio>No hay fechas ni ensayos este mes.</Vacio>
           ) : (
             <ul className="agenda-lista">
-              {delMes.map((f) => (
-                <li key={f.id}>
-                  <a className="agenda-lista__item" href={href({ nombre: 'fecha', id: f.id, seccion: 'resumen' })}>
-                    <span className="agenda-lista__dia">{diaCorto(f.fecha)}</span>
+              {delMes.map((it) => (
+                <li key={it.key}>
+                  <a className={`agenda-lista__item ${it.fecha ? '' : 'agenda-lista__item--ensayo'}`} href={it.href}>
+                    <span className="agenda-lista__dia">{diaCorto(it.dia)}</span>
                     <span className="agenda-lista__info">
-                      <strong>{f.nombre}</strong>
-                      <span>{f.lugar || 'Lugar a definir'}</span>
+                      <strong>{it.nombre}</strong>
+                      <span>{it.lugar || 'Lugar a definir'}</span>
                     </span>
-                    <EstadoSticker estado={f.estado} />
+                    {it.fecha ? <EstadoSticker estado={it.fecha.estado} /> : <span className="ensayo__estado">{it.ensayo}</span>}
                   </a>
                 </li>
               ))}
