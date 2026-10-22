@@ -252,6 +252,7 @@ export const SECCIONES_NAV: { id: SeccionId; label: string; corto: string }[] = 
   { id: 'logistica', label: 'Logística', corto: 'Logística' },
   { id: 'artistico', label: 'Artístico', corto: 'Artístico' },
   { id: 'vestuario', label: 'Vestuario / Maquillaje', corto: 'Vestuario' },
+  { id: 'ensayos', label: 'Ensayos', corto: 'Ensayos' },
   { id: 'economia', label: 'Economía', corto: 'Economía' },
   { id: 'difusion', label: 'Difusión', corto: 'Difusión' },
   { id: 'links', label: 'Links', corto: 'Links' },

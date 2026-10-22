@@ -135,6 +135,22 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
     out.push({ clave: `link:${l.id}`, texto: `sumó un link: ${corto(l.titulo || l.url, 60)}`, seccion: 'links' });
   }
 
+  // ensayos
+  const ensAntes = new Map((antes.ensayos ?? []).map((e) => [e.id, e]));
+  for (const e of despues.ensayos ?? []) {
+    const previo = ensAntes.get(e.id);
+    const nombre = e.titulo.trim() || 'un ensayo';
+    if (!previo) out.push({ clave: `ensayo:${e.id}`, texto: 'sumó un ensayo 🥁', seccion: 'ensayos' });
+    else if (previo.estado !== e.estado)
+      out.push({
+        clave: `ensayo-estado:${e.id}`,
+        texto: e.estado === 'confirmado' ? `confirmó el ensayo: ${corto(nombre, 50)} ✅` : e.estado === 'cancelado' ? `canceló el ensayo: ${corto(nombre, 50)}` : e.estado === 'hecho' ? `marcó como hecho el ensayo: ${corto(nombre, 50)}` : `pasó a confirmar el ensayo: ${corto(nombre, 50)}`,
+        seccion: 'ensayos',
+      });
+    else if (!mismo(previo, e)) out.push({ clave: `ensayo:${e.id}`, texto: `actualizó el ensayo: ${corto(nombre, 50)}`, seccion: 'ensayos' });
+  }
+  for (const id of ensAntes.keys()) if (!(despues.ensayos ?? []).some((e) => e.id === id)) out.push({ clave: `ensayo-borrado:${id}`, texto: 'borró un ensayo', seccion: 'ensayos' });
+
   // quórum
   if (!antes.quorum?.enviado && despues.quorum?.enviado) out.push({ clave: 'quorum', texto: 'mandó la encuesta de quórum 🔴🔴🔴', seccion: 'resumen' });
 
@@ -172,7 +188,11 @@ export function registrarActividad(antes: Fecha, despues: Fecha, autor: string, 
     if (i >= 0) {
       const previa = lista[i]!;
       const items = c.items ? [...new Set([...(previa.items ?? []), ...c.items])] : undefined;
-      const texto = items && c.seccion ? textoChecklist(despues, items, c.seccion) : c.texto;
+      let texto = items && c.seccion ? textoChecklist(despues, items, c.seccion) : c.texto;
+      // si lo acaba de crear, sigue siendo "sumó", ahora con nombre
+      if (previa.texto.startsWith('sumó un ensayo') && texto.startsWith('actualizó el ensayo: ')) {
+        texto = `sumó un ensayo 🥁: ${texto.slice('actualizó el ensayo: '.length)}`;
+      }
       lista.splice(i, 1);
       lista.unshift({ ...previa, cuando, texto, items });
     } else {

@@ -18,6 +18,11 @@ export interface Mejora {
 
 export const MEJORAS: Mejora[] = [
   {
+    cuando: '2026-10-22T10:30:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó los Ensayos 🥁: en cada fecha se pueden producir ensayos aparte (otro lugar, día u horario), con traslado, qué llevar y el mensaje para el grupo. También aparecen en el calendario.',
+  },
+  {
     cuando: '2026-10-20T15:15:00-03:00',
     autor: 'Cou',
     texto: 'sumó la campanita de Novedades 🔔: ahora se ve quién hizo qué en cada fecha, y acá van a aparecer las mejoras de La Produ.',

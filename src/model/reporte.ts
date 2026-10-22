@@ -1,4 +1,5 @@
 import { CAMARIN_IDEAL, TODAS_LAS_PREGUNTAS, type Pregunta } from './checklist';
+import { ensayosActivos, etiquetaDia, faltantesEnsayo, horarioEnsayo, nombreEnsayo } from './ensayos';
 import { esVisible, estaRespondida, etiquetaDe, pendientesAbiertos, type PendienteVista } from './logic';
 import type { Fecha, Respuesta, SeccionChecklistId, SeccionId } from './types';
 import { conHs } from './integrador';
@@ -265,6 +266,19 @@ export function armarReporte(f: Fecha, op: OpcionesReporte = OPCIONES_REPORTE, h
       partes.push(`🟡 Pendiente: ${nuevo(p.nuevo)}${p.texto}`);
     } else if (b.pendientes.length > 1) {
       partes.push(['🟡 Pendientes:', ...b.pendientes.map((p) => `• ${nuevo(p.nuevo)}${p.texto}`)].join('\n'));
+    }
+    out.push(partes.join('\n\n'));
+  }
+
+  // ensayos ad hoc
+  const ensayos = ensayosActivos(f);
+  if (ensayos.length) {
+    const partes: string[] = ['*🥁 ENSAYOS*'];
+    for (const e of ensayos) {
+      const cuando = [e.dia ? etiquetaDia(e.dia) : 'día a definir', horarioEnsayo(e), e.lugar?.trim() && `en ${e.lugar.trim()}`].filter(Boolean).join(', ');
+      const falta = faltantesEnsayo(e);
+      const linea = `${e.estado === 'confirmado' ? '✅' : '🟡'} ${nombreEnsayo(e)}: ${cuando}${e.estado === 'confirmado' ? '.' : ' (a confirmar).'}`;
+      partes.push(falta.length ? `${linea}\nFalta: ${falta.join(', ')}.` : linea);
     }
     out.push(partes.join('\n\n'));
   }

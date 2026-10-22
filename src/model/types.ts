@@ -1,6 +1,7 @@
 import type { Integrador } from './integrador';
 import type { Quorum } from './quorum';
 import type { Actividad } from './actividad';
+import type { Ensayo } from './ensayos';
 
 /**
  * MODELO DE DATOS DE LA PRODU
@@ -73,6 +74,7 @@ export type SeccionId =
   | 'resumen'
   | 'pendientes'
   | SeccionChecklistId
+  | 'ensayos'
   | 'economia'
   | 'links'
   | 'integrador'
@@ -270,6 +272,8 @@ export interface Fecha {
   reporteBorrador?: string;
   /** quién hizo qué (la campanita de novedades) */
   actividad?: Actividad[];
+  /** ensayos ad hoc que se producen para esta fecha */
+  ensayos?: Ensayo[];
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
