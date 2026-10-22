@@ -1,4 +1,5 @@
 import { TODAS_LAS_PREGUNTAS, seccionLabel } from '../model/checklist';
+import { ESTADO_ENSAYO_LABEL, faltantesEnsayo, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
 import { estadoQuorum } from '../model/quorum';
 import {
   esVisible,
@@ -118,7 +119,24 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     })),
   );
 
-  return { Fechas: resumen, Movimientos: movimientos, Pendientes: pendientes, Updates: updates, Links: links, Checklist: checklist };
+  const ensayos: Fila[] = ordenadas.flatMap((f) =>
+    (f.ensayos ?? []).map((e) => ({
+      Fecha: f.nombre,
+      Ensayo: nombreEnsayo(e),
+      Día: e.dia,
+      Horario: horarioEnsayo(e),
+      Lugar: [e.lugar, e.direccion].filter(Boolean).join(' — '),
+      Estado: ESTADO_ENSAYO_LABEL[e.estado],
+      'Qué ensayamos': e.objetivo ?? '',
+      Quiénes: e.quienes ?? '',
+      Produce: e.responsable ?? '',
+      Traslado: [e.traslado, e.encuentro, e.salida].filter(Boolean).join(' · '),
+      Costo: e.costo ?? '',
+      'Falta resolver': faltantesEnsayo(e).join(', '),
+    })),
+  );
+
+  return { Fechas: resumen, Movimientos: movimientos, Pendientes: pendientes, Updates: updates, Ensayos: ensayos, Links: links, Checklist: checklist };
 }
 
 export async function exportarPlanilla(fechas: Fecha[]): Promise<boolean> {
