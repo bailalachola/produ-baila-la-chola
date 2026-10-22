@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import { ESTADO_ENSAYO_LABEL, etiquetaDia, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
 import { CHECKLIST, COMPARABLES, type SeccionChecklist } from '../model/checklist';
 import {
   balancesPorMoneda,
@@ -717,6 +718,34 @@ export function generarBitacora(f: Fecha): jsPDF {
       },
     );
     d.parrafo('Marca magenta: decisión · naranja: cambio · violeta: resuelto.', { size: 8, color: C.gris, estilo: 'italic' });
+  }
+
+  // Ensayos ad hoc
+  const ensayos = [...(f.ensayos ?? [])].sort((a, b) => (a.dia || '9').localeCompare(b.dia || '9'));
+  if (ensayos.length) {
+    d.seccion('Ensayos');
+    d.tabla(
+      [
+        { t: 'Día', w: 20 },
+        { t: 'Ensayo', w: 60 },
+        { t: 'Estado', w: 20 },
+      ],
+      ensayos.map((e) => [
+        [etiquetaDia(e.dia), horarioEnsayo(e)].filter(Boolean).join('\n'),
+        [
+          nombreEnsayo(e),
+          [e.lugar, e.direccion].filter(Boolean).join(' — '),
+          e.objetivo && `Qué: ${e.objetivo}`,
+          [e.traslado, e.encuentro && `encuentro: ${e.encuentro}`, e.salida && `salida: ${e.salida}`].filter(Boolean).join(' · '),
+          e.costo && `Costo: ${e.costo}`,
+          e.notas,
+        ]
+          .filter(Boolean)
+          .join('\n'),
+        ESTADO_ENSAYO_LABEL[e.estado],
+      ]),
+      (i) => (ensayos[i]!.estado === 'cancelado' ? C.gris : ensayos[i]!.estado === 'confirmado' || ensayos[i]!.estado === 'hecho' ? C.violeta : C.naranja),
+    );
   }
 
   // Links y archivos
