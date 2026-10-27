@@ -1,5 +1,5 @@
 import { href } from '../router';
-import { ESTADO_LABEL, ESTADOS } from '../model/types';
+import { ESTADO_LABEL, ESTADOS, ESTADOS_CAMINO } from '../model/types';
 import { EstadoSticker, Icon, TituloSeccion } from '../components/ui';
 
 /**
@@ -36,11 +36,22 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         momento: 'Antes de decir que sí',
         titulo: 'Preguntamos el quórum',
         texto:
-          'Mandamos la encuesta al grupo de Cholas: tres rojos al principio y al final, qué fecha es, qué día, la info que ayuda a decidir y “Puedo / No puedo”. La app arma la pregunta y las opciones para copiar. Después anotamos cómo salió: si hay quórum la fecha sigue; si no, queda registrada como sin quórum.',
+          'Mandamos la encuesta al grupo de Cholas: tres rojos al principio y al final, qué fecha es, qué día, la info que ayuda a decidir y “Puedo / No puedo”. La app arma la pregunta y las opciones para copiar. Después anotamos cómo salió.',
         donde: ['Resumen de la idea → Quórum'],
         tips: [
           'Los tres rojos 🔴🔴🔴 avisan que lo único que hay que hacer es contestar.',
           'WhatsApp corta la pregunta a 255 caracteres: la app avisa si te pasás.',
+        ],
+      },
+      {
+        momento: 'Con el quórum y la respuesta del espacio',
+        titulo: 'Decidimos si avanzamos',
+        texto:
+          'El quórum ayuda, pero no decide solo: puede haber quórum y que el espacio cancele. Elegimos “Sí, avanzamos” o “No avanzamos” y escribimos por qué (es obligatorio). Si avanzamos, pasa a producción; si no, queda como Cancelada con el motivo.',
+        donde: ['Resumen de la idea → ¿Avanzamos?', 'Inicio → Canceladas'],
+        tips: [
+          'Si una fecha en producción se cae, en el Resumen está “¿Se cayó la fecha? Cancelarla”, también con motivo.',
+          'Una fecha cancelada se puede reabrir.',
         ],
       },
     ],
@@ -205,10 +216,10 @@ export function GuiaView() {
         </TituloSeccion>
 
         <ol className="guia__ciclo" aria-label="Estados de una fecha">
-          {ESTADOS.map((e, i) => (
+          {ESTADOS_CAMINO.map((e, i) => (
             <li key={e}>
               <EstadoSticker estado={e} />
-              {i < ESTADOS.length - 1 && <span className="guia__flecha" aria-hidden="true">→</span>}
+              {i < ESTADOS_CAMINO.length - 1 && <span className="guia__flecha" aria-hidden="true">→</span>}
             </li>
           ))}
         </ol>

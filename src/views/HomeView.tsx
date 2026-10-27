@@ -17,7 +17,7 @@ import { Campanita } from '../components/Campanita';
 import { agruparPorFecha } from '../model/agenda';
 import { estadoQuorum } from '../model/quorum';
 
-type Filtro = 'activas' | 'ideas' | 'realizadas' | 'cerradas' | 'todas';
+type Filtro = 'activas' | 'ideas' | 'realizadas' | 'cerradas' | 'canceladas' | 'todas';
 
 const FILTROS: { id: Filtro; label: string }[] = [
   { id: 'todas', label: 'Todas' },
@@ -25,6 +25,7 @@ const FILTROS: { id: Filtro; label: string }[] = [
   { id: 'ideas', label: 'Ideas' },
   { id: 'realizadas', label: 'Realizadas' },
   { id: 'cerradas', label: 'Cerradas' },
+  { id: 'canceladas', label: 'Canceladas' },
 ];
 
 const pasaFiltro = (f: Fecha, filtro: Filtro) =>
@@ -32,7 +33,8 @@ const pasaFiltro = (f: Fecha, filtro: Filtro) =>
   (filtro === 'activas' && ['produccion', 'confirmada'].includes(f.estado)) ||
   (filtro === 'ideas' && f.estado === 'idea') ||
   (filtro === 'realizadas' && f.estado === 'realizada') ||
-  (filtro === 'cerradas' && f.estado === 'cerrada');
+  (filtro === 'cerradas' && f.estado === 'cerrada') ||
+  (filtro === 'canceladas' && f.estado === 'cancelada');
 
 export function HomeView() {
   const { fechas, importar, cargarDemo, tieneDemo, remoto } = useStore();
@@ -257,7 +259,11 @@ function FechaCard({ fecha: f, indice }: { fecha: Fecha; indice: number }) {
       <p className="card__meta">
         {f.lugar || 'Lugar a definir'} · {f.responsable || (f.estado === 'idea' ? 'Sin dueña todavía' : 'Sin responsable')}
       </p>
-      {f.estado === 'idea' ? (
+      {f.estado === 'cancelada' ? (
+        <div className="card__pie card__pie--idea">
+          <p className="card__nota">✗ {f.decision?.motivo || 'Cancelada'}</p>
+        </div>
+      ) : f.estado === 'idea' ? (
         <div className="card__pie card__pie--idea">
           <p className="card__nota">{f.nota?.trim() || 'Idea para más adelante. Todavía no la producimos.'}</p>
           {estadoQuorum(f.quorum) && (

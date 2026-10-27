@@ -2,12 +2,12 @@ import { useStore } from '../store';
 import { href, ir } from '../router';
 import { CHECKLIST, seccionLabel } from '../model/checklist';
 import { faltantesCriticos, fechaHora, pendientesAbiertos, progresoSeccion } from '../model/logic';
-import { ESTADOS, ESTADO_LABEL, RELATO_PREVIO, TIPOS_FECHA, type Fecha } from '../model/types';
+import { ESTADOS_CAMINO, ESTADO_LABEL, RELATO_PREVIO, TIPOS_FECHA, type Fecha } from '../model/types';
 import { RelatoCampos } from '../components/RelatoCampos';
 import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
-import { ahora, uid } from '../model/factory';
 import { RiesgosEditor } from '../components/RiesgosEditor';
 import { QuorumBloque } from '../components/QuorumBloque';
+import { CanceladaBanner, DecisionBloque } from '../components/DecisionBloque';
 import { useConfirmar } from '../components/Dialog';
 import { useToast } from '../components/Toast';
 import { useBitacora } from '../pdf/useBitacora';
@@ -23,25 +23,6 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
   const set = <K extends keyof Fecha>(k: K, v: Fecha[K]) => actualizar(fecha.id, (f) => ({ ...f, [k]: v }));
 
   const esIdea = fecha.estado === 'idea';
-
-  async function onProducir() {
-    const quien = fecha.responsable.trim();
-    if (!quien) {
-      toast('Antes de arrancar, decí quién queda responsable.', 'error');
-      document.getElementById('idea-resp')?.focus();
-      return;
-    }
-    actualizar(fecha.id, (f) => ({
-      ...f,
-      estado: 'produccion',
-      updates: [
-        { id: uid('upd'), cuando: ahora(), categoria: 'DECISIÓN', texto: `Decidimos ir: pasamos la idea a producción. Responsable de Producción: ${quien}.`, autor: quien },
-        ...f.updates,
-      ],
-    }));
-    toast('¡A producir! Arrancamos por el checklist 🥁');
-    ir({ nombre: 'fecha', id: fecha.id, seccion: 'espacio' });
-  }
 
   async function onEliminar() {
     const ok = await confirmar(
@@ -84,13 +65,11 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
             </Campo>
           </div>
           <QuorumBloque fecha={fecha} />
-          {fecha.quorum?.resultado !== 'no' && (
-            <button type="button" className="btn btn--mega btn--block" onClick={onProducir}>
-              ¡Vamos! Pasar a producción <Icon name="arrow" />
-            </button>
-          )}
+          <DecisionBloque fecha={fecha} />
         </div>
       )}
+
+      {fecha.estado === 'cancelada' && <CanceladaBanner fecha={fecha} />}
 
       {fecha.estado === 'produccion' && (
         <details className="quorum-plegado" open={!!fecha.quorum}>
@@ -99,7 +78,7 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
         </details>
       )}
 
-      {!esIdea && (faltan.length > 0 || pend.length > 0) && (
+      {!esIdea && fecha.estado !== 'cancelada' && (faltan.length > 0 || pend.length > 0) && (
         <div className="falta">
           <h3 className="falta__titulo">Antes de cerrar la fecha nos falta…</h3>
           <ul className="falta__lista">
@@ -122,10 +101,11 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
         </div>
       )}
 
+      {!esIdea && fecha.estado !== 'cancelada' && (
       <div className="bloque">
         <h3 className="bloque__titulo">¿En qué estado está?</h3>
         <div className="estados" role="group" aria-label="Estado de la fecha">
-          {ESTADOS.map((e) => (
+          {ESTADOS_CAMINO.filter((e) => e !== 'idea').map((e) => (
             <button
               key={e}
               type="button"
@@ -137,7 +117,14 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
             </button>
           ))}
         </div>
+        {(fecha.estado === 'produccion' || fecha.estado === 'confirmada') && (
+          <details className="decision-plegada">
+            <summary>¿Se cayó la fecha? Cancelarla</summary>
+            <DecisionBloque fecha={fecha} soloCancelar />
+          </details>
+        )}
       </div>
+      )}
 
       <div className="bloque">
         <h3 className="bloque__titulo">Checklist por sección</h3>
