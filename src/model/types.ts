@@ -13,7 +13,9 @@ import type { Ensayo } from './ensayos';
 export type ISODate = string; // 'YYYY-MM-DD'
 export type ISODateTime = string; // ISO 8601 completo
 
-export const ESTADOS = ['idea', 'produccion', 'confirmada', 'realizada', 'cerrada'] as const;
+export const ESTADOS = ['idea', 'produccion', 'confirmada', 'realizada', 'cerrada', 'cancelada'] as const;
+/** el camino normal de una fecha (cancelada queda aparte: se llega con una decisión) */
+export const ESTADOS_CAMINO = ['idea', 'produccion', 'confirmada', 'realizada', 'cerrada'] as const;
 export type EstadoFecha = (typeof ESTADOS)[number];
 
 export const ESTADO_LABEL: Record<EstadoFecha, string> = {
@@ -22,6 +24,7 @@ export const ESTADO_LABEL: Record<EstadoFecha, string> = {
   confirmada: 'Confirmada',
   realizada: 'Realizada',
   cerrada: 'Cerrada',
+  cancelada: 'Cancelada',
 };
 
 export const TIPOS_FECHA = [
@@ -274,6 +277,8 @@ export interface Fecha {
   actividad?: Actividad[];
   /** ensayos ad hoc que se producen para esta fecha */
   ensayos?: Ensayo[];
+  /** ¿avanzamos o no? (obligatorio con motivo para salir de Idea o para cancelar) */
+  decision?: Decision;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;
@@ -323,3 +328,26 @@ export const CATEGORIAS_DOCUMENTOS: CategoriaLink[] = [
   { id: 'produccion', label: 'Producción', ayuda: 'Planillas, modelos de contrato, presupuestos.' },
   { id: 'otros', label: 'Otros', ayuda: '' },
 ];
+
+/* ---------- decisión: ¿avanzamos o no? ---------- */
+
+export interface Decision {
+  avanza: boolean;
+  /** por qué: obligatorio */
+  motivo: string;
+  cuando: ISODateTime;
+  quien?: string;
+  /** en qué estado estaba antes (para poder reabrir) */
+  estadoAnterior: EstadoFecha;
+}
+
+/** Motivos frecuentes, para elegir rápido */
+export const MOTIVOS_NO_AVANZA = [
+  'El espacio canceló la fecha',
+  'El espacio no aceptó la fecha',
+  'No hubo quórum',
+  'No nos dan los tiempos',
+  'No conviene económicamente',
+  'Se superpone con otra fecha',
+];
+export const MOTIVOS_AVANZA = ['Hay quórum y el espacio confirmó', 'Hay quórum', 'Es una fecha que nos importa'];

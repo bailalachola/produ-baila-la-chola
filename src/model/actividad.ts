@@ -82,7 +82,17 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
 
   // estado
   if (antes.estado !== despues.estado) {
-    out.push({ clave: 'estado', texto: `pasó la fecha a ${ESTADO_LABEL[despues.estado]}` });
+    const texto =
+      despues.estado === 'cancelada'
+        ? antes.estado === 'idea'
+          ? 'decidió no avanzar con la idea ✗'
+          : 'canceló la fecha ✗'
+        : antes.estado === 'idea' && despues.estado === 'produccion'
+          ? 'decidió avanzar: pasó la idea a producción ✓'
+          : antes.estado === 'cancelada'
+            ? 'reabrió la fecha'
+            : `pasó la fecha a ${ESTADO_LABEL[despues.estado]}`;
+    out.push({ clave: 'estado', texto });
   }
 
   // checklist, agrupado por sección

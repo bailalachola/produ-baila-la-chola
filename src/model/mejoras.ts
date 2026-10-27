@@ -18,6 +18,12 @@ export interface Mejora {
 
 export const MEJORAS: Mejora[] = [
   {
+    cuando: '2026-10-27T10:00:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó la decisión “¿Avanzamos?” en las ideas: además del quórum, se elige si avanzamos o no y se escribe por qué (obligatorio). Las que no avanzan quedan como Canceladas, con su motivo.',
+    ir: { nombre: 'home' },
+  },
+  {
     cuando: '2026-10-22T10:30:00-03:00',
     autor: 'Cou',
     texto: 'sumó los Ensayos 🥁: en cada fecha se pueden producir ensayos aparte (otro lugar, día u horario), con traslado, qué llevar y el mensaje para el grupo. También aparecen en el calendario.',

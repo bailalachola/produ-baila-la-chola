@@ -23,7 +23,7 @@ export interface GruposAgenda {
   pasadas: Fecha[];
 }
 
-const ORDEN_SIN_FECHA: Record<Fecha['estado'], number> = { confirmada: 0, produccion: 1, idea: 2, realizada: 3, cerrada: 4 };
+const ORDEN_SIN_FECHA: Record<Fecha['estado'], number> = { confirmada: 0, produccion: 1, idea: 2, realizada: 3, cerrada: 4, cancelada: 5 };
 
 /**
  * Próximas (de la más cercana a la más lejana), después las que no tienen día,
