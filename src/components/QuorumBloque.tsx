@@ -40,8 +40,8 @@ export function QuorumBloque({ fecha, onSeguir }: { fecha: Fecha; onSeguir?: () 
     const nums = resumenNumeros(q);
     const texto =
       resultado === 'si'
-        ? `Hay quórum${nums ? ` (${nums})` : ''}: la fecha sigue.`
-        : `No hay quórum${nums ? ` (${nums})` : ''}: esta fecha no la hacemos.`;
+        ? `Hay quórum${nums ? ` (${nums})` : ''}.`
+        : `No hay quórum${nums ? ` (${nums})` : ''}.`;
     actualizar(fecha.id, (f) => ({
       ...f,
       quorum: { ...(f.quorum ?? quorumVacio()), resultado, decidido: ahora() },
