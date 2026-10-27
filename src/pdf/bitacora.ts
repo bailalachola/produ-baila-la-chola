@@ -568,6 +568,7 @@ export function generarBitacora(f: Fecha): jsPDF {
   d.kv('Evento', f.evento || f.nombre);
   d.kv('Fecha de presentación', fechaLarga(f.fecha));
   d.kv('Ciudad / lugar', f.lugar);
+  if (f.decision) d.kv(f.decision.avanza ? 'Decisión: avanzamos' : 'Decisión: no avanzamos', f.decision.motivo, f.decision.avanza ? undefined : C.naranja);
   d.kv('Espacio', f.direccion ?? f.respuestas.esp_direccion?.valor ?? '');
   d.kv('Tipo de fecha', f.tipo);
   d.kv('Formato', f.formato ?? '');
