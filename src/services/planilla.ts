@@ -41,6 +41,7 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     Contraparte: f.contacto ?? '',
     'Idea / nota': f.nota ?? '',
     Quórum: estadoQuorum(f.quorum)?.texto ?? '',
+    Decisión: f.decision ? `${f.decision.avanza ? 'Avanza' : 'No avanza'}: ${f.decision.motivo}` : '',
     'Checklist %': progresoGeneral(f).porcentaje,
     'Pendientes abiertos': pendientesAbiertos(f).length,
     'Balance de Producción': f.cierre.balance ?? '',
