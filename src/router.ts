@@ -16,7 +16,7 @@ export type Ruta =
 
 const SECCIONES: SeccionId[] = [
   'resumen', 'pendientes', 'espacio', 'tecnica', 'logistica', 'artistico',
-  'vestuario', 'ensayos', 'economia', 'difusion', 'links', 'integrador', 'updates', 'cierre',
+  'vestuario', 'ensayos', 'economia', 'difusion', 'links', 'integrador', 'validar', 'updates', 'cierre',
 ];
 
 export function parsear(hash: string): Ruta {
