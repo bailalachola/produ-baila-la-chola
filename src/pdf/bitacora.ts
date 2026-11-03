@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import { renglonesArreglo, textoArreglo } from '../model/arreglo';
 import { ESTADO_ENSAYO_LABEL, etiquetaDia, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
 import { CHECKLIST, COMPARABLES, type SeccionChecklist } from '../model/checklist';
 import {
@@ -568,6 +569,7 @@ export function generarBitacora(f: Fecha): jsPDF {
   d.kv('Evento', f.evento || f.nombre);
   d.kv('Fecha de presentación', fechaLarga(f.fecha));
   d.kv('Ciudad / lugar', f.lugar);
+  if (renglonesArreglo(f.arreglo).length) d.kv('Arreglo económico', textoArreglo(f.arreglo));
   if (f.decision) d.kv(f.decision.avanza ? 'Decisión: avanzamos' : 'Decisión: no avanzamos', f.decision.motivo, f.decision.avanza ? undefined : C.naranja);
   d.kv('Espacio', f.direccion ?? f.respuestas.esp_direccion?.valor ?? '');
   d.kv('Tipo de fecha', f.tipo);
