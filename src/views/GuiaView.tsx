@@ -112,9 +112,9 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
       },
       {
         momento: 'Cuando hay plata en juego',
-        titulo: 'Anotamos la economía',
+        titulo: 'Dejamos claro el arreglo y la economía',
         texto:
-          'Ingresos y gastos, quién pagó y quién recibió. Pesos y dólares siempre por separado. Lo que falta reintegrar o confirmar queda marcado.',
+          'Primero el arreglo económico (obligatorio): cachet, viáticos, gorra, porcentaje… y qué cubre. Sale en el Integrador para que toda la murga sepa cómo es. Después, ingresos y gastos: quién pagó y quién recibió. Pesos y dólares siempre por separado.',
         donde: ['Economía'],
       },
     ],
@@ -129,6 +129,14 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         texto:
           'Pasamos el estado a Confirmada. En el Resumen, “Antes de cerrar la fecha nos falta…” muestra lo crítico que todavía no está.',
         donde: ['Resumen → Estado'],
+      },
+      {
+        momento: 'Antes de la fecha, para evitar sorpresas',
+        titulo: 'Validamos con la producción del otro lado',
+        texto:
+          'Le mandamos lo que tenemos entendido, parte por parte (horarios, espacio, técnica, show, logística, arreglo económico, difusión), con lo que todavía falta confirmar. Cuando responden, marcamos cada parte: De acuerdo o Hubo cambios.',
+        donde: ['Fecha → Validar'],
+        tips: ['Si hubo cambios, después actualizalo en el checklist o en Economía.'],
       },
       {
         momento: 'Cuando hay que contar qué viene',

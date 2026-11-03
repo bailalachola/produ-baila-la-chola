@@ -12,6 +12,8 @@ import { Icon, Input, TextArea, TituloSeccion } from '../components/ui';
 import { useToast } from '../components/Toast';
 import { useConfirmar } from '../components/Dialog';
 import { copiar } from '../lib/clipboard';
+import { arregloCompleto, textoArreglo } from '../model/arreglo';
+import { href } from '../router';
 
 /** *negrita* y _cursiva_ como en WhatsApp, para la vista previa */
 export function FormatoWhatsApp({ texto }: { texto: string }) {
@@ -191,7 +193,18 @@ export function IntegradorView({ fecha }: { fecha: Fecha }) {
           {campo('maquillajeCoordina', 'Maquillaje: ¿quién coordina?', { placeholder: 'ej: Clari' })}
           {campo('maquillaje', 'Maquillaje 🎨', { filas: 4 })}
           {campo('comida', 'Comida 🥑', { filas: 2 })}
-          {campo('recaudacion', 'Recaudación 💸', { filas: 2, placeholder: 'ej: 300.000 nos dan para un viático' })}
+          {campo('recaudacion', 'Arreglo económico 💸', { filas: 3, ayuda: 'Sale del arreglo cargado en Economía, para que toda la murga sepa cómo es.' })}
+          {arregloCompleto(fecha.arreglo) && (integ.recaudacion ?? '').trim() !== textoArreglo(fecha.arreglo) && (
+            <button type="button" className="link-btn integrador__mas" onClick={() => guardar({ recaudacion: textoArreglo(fecha.arreglo) })}>
+              ↻ Traer el arreglo actualizado de Economía
+            </button>
+          )}
+          {!arregloCompleto(fecha.arreglo) && (
+            <p className="relato__hint">
+              Todavía no está cargado el arreglo económico.{' '}
+              <a href={href({ nombre: 'fecha', id: fecha.id, seccion: 'economia' })}>Cargarlo en Economía →</a>
+            </p>
+          )}
           {campo('recordatorios', 'Recordatorios', { filas: 3, ayuda: 'Uno por renglón.' })}
           {campo('show', 'Show 🎭', { filas: 5, ayuda: 'El orden de lo que hacemos, uno por renglón.' })}
           {campo('reaccion', 'Pedido de reacción', { placeholder: 'Reaccionen con un emoticón de primavera 🌼' })}

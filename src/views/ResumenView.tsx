@@ -7,6 +7,8 @@ import { RelatoCampos } from '../components/RelatoCampos';
 import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
 import { RiesgosEditor } from '../components/RiesgosEditor';
 import { QuorumBloque } from '../components/QuorumBloque';
+import { faltaArreglo } from '../model/arreglo';
+import { resumenValidacion } from '../model/validacion';
 import { CanceladaBanner, DecisionBloque } from '../components/DecisionBloque';
 import { useConfirmar } from '../components/Dialog';
 import { useToast } from '../components/Toast';
@@ -71,6 +73,8 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
 
       {fecha.estado === 'cancelada' && <CanceladaBanner fecha={fecha} />}
 
+      {(fecha.estado === 'produccion' || fecha.estado === 'confirmada') && <ValidacionChip fecha={fecha} />}
+
       {fecha.estado === 'produccion' && (
         <details className="quorum-plegado" open={!!fecha.quorum}>
           <summary>Quórum de la murga</summary>
@@ -78,10 +82,17 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
         </details>
       )}
 
-      {!esIdea && fecha.estado !== 'cancelada' && (faltan.length > 0 || pend.length > 0) && (
+      {!esIdea && fecha.estado !== 'cancelada' && (faltan.length > 0 || pend.length > 0 || faltaArreglo(fecha)) && (
         <div className="falta">
           <h3 className="falta__titulo">Antes de cerrar la fecha nos falta…</h3>
           <ul className="falta__lista">
+            {faltaArreglo(fecha) && (
+              <li>
+                <a href={href({ nombre: 'fecha', id: fecha.id, seccion: 'economia' })}>
+                  <span className="tag">Economía</span> Arreglo económico
+                </a>
+              </li>
+            )}
             {faltan.map((u) => (
               <li key={u.pregunta.id}>
                 <a href={href({ nombre: 'fecha', id: fecha.id, seccion: u.seccion })}>
@@ -252,5 +263,20 @@ function UltimasNovedades({ fecha }: { fecha: Fecha }) {
         Ver todo lo que se hizo en esta fecha →
       </a>
     </div>
+  );
+}
+
+function ValidacionChip({ fecha }: { fecha: Fecha }) {
+  const r = resumenValidacion(fecha);
+  if (!r.total) return null;
+  const todo = r.ok === r.total;
+  return (
+    <a className={`validacion-chip ${todo ? 'is-ok' : r.cambios ? 'is-cambios' : ''}`} href={href({ nombre: 'fecha', id: fecha.id, seccion: 'validar' })}>
+      <span>🤝 Validado con la producción del otro lado</span>
+      <strong>
+        {r.ok}/{r.total}
+        {r.cambios ? ` · ${r.cambios} con cambios` : ''}
+      </strong>
+    </a>
   );
 }

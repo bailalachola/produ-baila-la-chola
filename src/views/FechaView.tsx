@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { ValidarView } from './ValidarView';
 import { EnsayosView } from './EnsayosView';
 import { Campanita } from '../components/Campanita';
 import { useStore } from '../store';
@@ -144,6 +145,8 @@ function Contenido({ fecha, seccion }: { fecha: Fecha; seccion: SeccionId }) {
       return <IntegradorView fecha={fecha} />;
     case 'ensayos':
       return <EnsayosView fecha={fecha} />;
+    case 'validar':
+      return <ValidarView fecha={fecha} />;
     default: {
       const s = getSeccion(seccion);
       return s ? <ChecklistView fecha={fecha} seccion={s} /> : null;
