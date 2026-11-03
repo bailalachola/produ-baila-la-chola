@@ -257,6 +257,7 @@ export const SECCIONES_NAV: { id: SeccionId; label: string; corto: string }[] = 
   { id: 'difusion', label: 'Difusión', corto: 'Difusión' },
   { id: 'links', label: 'Links', corto: 'Links' },
   { id: 'integrador', label: 'Integrador', corto: 'Integrador' },
+  { id: 'validar', label: 'Validar', corto: 'Validar' },
   { id: 'updates', label: 'Updates', corto: 'Updates' },
   { id: 'cierre', label: 'Retirada', corto: 'Retirada' },
 ];

@@ -1,4 +1,5 @@
 import { PREGUNTAS_POR_ID, seccionLabel } from './checklist';
+import { DIMENSIONES } from './validacion';
 import { formatoMonto } from './logic';
 import { MEJORAS } from './mejoras';
 import type { Ruta } from '../router';
@@ -112,7 +113,7 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
 
   // updates
   const updAntes = new Set(antes.updates.map((u) => u.id));
-  for (const u of despues.updates.filter((x) => !updAntes.has(x.id))) {
+  for (const u of despues.updates.filter((x) => !updAntes.has(x.id) && x.tema !== 'Validación con la contraparte')) {
     const alGrupo = u.tema === 'Update al grupo';
     out.push({
       clave: `update:${u.id}`,
@@ -163,6 +164,19 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
 
   // quórum
   if (!antes.quorum?.enviado && despues.quorum?.enviado) out.push({ clave: 'quorum', texto: 'mandó la encuesta de quórum 🔴🔴🔴', seccion: 'resumen' });
+
+  // arreglo económico
+  if (despues.arreglo && !mismo(antes.arreglo, despues.arreglo)) out.push({ clave: 'arreglo', texto: 'actualizó el arreglo económico 💸', seccion: 'economia' });
+
+  // validación con la contraparte
+  const vAntes = antes.validacion?.dimensiones ?? {};
+  for (const [id, d] of Object.entries(despues.validacion?.dimensiones ?? {})) {
+    if (vAntes[id]?.estado === d.estado) continue;
+    const nombre = DIMENSIONES.find((x) => x.id === id)?.titulo ?? id;
+    if (d.estado === 'ok') out.push({ clave: `valid:${id}`, texto: `validó con la contraparte: ${nombre} 🤝`, seccion: 'validar' });
+    if (d.estado === 'cambios') out.push({ clave: `valid:${id}`, texto: `anotó cambios de la contraparte en ${nombre}`, seccion: 'validar' });
+  }
+  if (!antes.validacion?.enviado && despues.validacion?.enviado) out.push({ clave: 'valid-enviado', texto: 'mandó las condiciones a la producción del otro lado para validar', seccion: 'validar' });
 
   // integrador
   if (despues.integrador && !mismo(antes.integrador, despues.integrador)) out.push({ clave: 'integrador', texto: 'editó el integrador', seccion: 'integrador' });

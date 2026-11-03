@@ -1,6 +1,7 @@
 import type { Fecha, Respuesta } from './types';
 import { formatoMonto } from './logic';
 import { CAMARIN_IDEAL } from './checklist';
+import { arregloCompleto, textoArreglo } from './arreglo';
 
 /**
  * INTEGRADOR
@@ -112,11 +113,13 @@ export function integradorSugerido(f: Fecha): Integrador {
   if (r.log_comida?.estado === 'no') comida = 'No hay comida: cada unx lleva lo suyo.';
   comida = [comida, 'Lleven agua y bebibles que gusten.'].filter(Boolean).join('\n');
 
-  // recaudación: ingresos en pesos (sin sumar monedas)
+  // recaudación: el arreglo económico (si no hay, los ingresos cargados; nunca se suman monedas)
   const ingresos = f.movimientos.filter((m) => m.tipo === 'ingreso');
-  const recaudacion = ingresos.length
-    ? ingresos.map((m) => `${formatoMonto(m.monto, m.moneda)}: ${m.concepto}`).join('\n')
-    : '';
+  const recaudacion = arregloCompleto(f.arreglo)
+    ? textoArreglo(f.arreglo)
+    : ingresos.length
+      ? ingresos.map((m) => `${formatoMonto(m.monto, m.moneda)}: ${m.concepto}`).join('\n')
+      : '';
 
   // recordatorios
   const recordatorios = [
@@ -195,7 +198,7 @@ export function armarIntegrador(f: Fecha, i: Integrador): string {
     bloque('MAQUILLAJE 🎨👩🏻‍🎨✨', modo(i.maquillajeModo), (coordina(i.maquillajeCoordina) + '\n' + (i.maquillaje ?? '')).trim()),
   );
   partes.push(bloque('COMIDA 🥑🍕🥤', '', i.comida));
-  partes.push(bloque('RECAUDACIÓN 💸', '', i.recaudacion));
+  partes.push(bloque('ARREGLO ECONÓMICO 💸', '', i.recaudacion));
 
   const recs = (i.recordatorios ?? '')
     .split('\n')

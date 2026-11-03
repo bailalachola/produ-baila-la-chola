@@ -2,6 +2,8 @@ import type { Integrador } from './integrador';
 import type { Quorum } from './quorum';
 import type { Actividad } from './actividad';
 import type { Ensayo } from './ensayos';
+import type { Arreglo } from './arreglo';
+import type { Validacion } from './validacion';
 
 /**
  * MODELO DE DATOS DE LA PRODU
@@ -81,6 +83,7 @@ export type SeccionId =
   | 'economia'
   | 'links'
   | 'integrador'
+  | 'validar'
   | 'updates'
   | 'cierre';
 
@@ -279,6 +282,10 @@ export interface Fecha {
   ensayos?: Ensayo[];
   /** ¿avanzamos o no? (obligatorio con motivo para salir de Idea o para cancelar) */
   decision?: Decision;
+  /** arreglo económico con la producción del otro lado (obligatorio) */
+  arreglo?: Arreglo;
+  /** validación de condiciones con la producción del otro lado */
+  validacion?: Validacion;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;

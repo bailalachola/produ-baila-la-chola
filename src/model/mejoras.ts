@@ -18,6 +18,16 @@ export interface Mejora {
 
 export const MEJORAS: Mejora[] = [
   {
+    cuando: '2026-11-02T15:00:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó “Validar” 🤝: un mensaje para la producción del otro lado con lo que tenemos entendido, parte por parte (horarios, espacio, técnica, arreglo…), para que nos digan si estamos de acuerdo. Se anota qué validaron y qué cambió.',
+  },
+  {
+    cuando: '2026-11-02T14:55:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó el Arreglo económico 💸 en Economía: es obligatorio, y sale en el Integrador para que toda la murga sepa cómo es.',
+  },
+  {
     cuando: '2026-10-27T10:00:00-03:00',
     autor: 'Cou',
     texto: 'sumó la decisión “¿Avanzamos?” en las ideas: además del quórum, se elige si avanzamos o no y se escribe por qué (obligatorio). Las que no avanzan quedan como Canceladas, con su motivo.',

@@ -1,4 +1,5 @@
 import { CAMARIN_IDEAL, TODAS_LAS_PREGUNTAS, type Pregunta } from './checklist';
+import { renglonesArreglo } from './arreglo';
 import { ensayosActivos, etiquetaDia, faltantesEnsayo, horarioEnsayo, nombreEnsayo } from './ensayos';
 import { esVisible, estaRespondida, etiquetaDe, pendientesAbiertos, type PendienteVista } from './logic';
 import type { Fecha, Respuesta, SeccionChecklistId, SeccionId } from './types';
@@ -151,7 +152,7 @@ function valorDe(p: Pregunta, r: Respuesta): string {
 }
 
 /** Lo resuelto de una pregunta, como frase. '' si no hay nada que contar. */
-function fraseResuelta(p: Pregunta, r: Respuesta): string {
+export function fraseResuelta(p: Pregunta, r: Respuesta): string {
   const f = FRASES[p.id];
   let base = '';
   if (p.tipo === 'sino') {
@@ -268,6 +269,13 @@ export function armarReporte(f: Fecha, op: OpcionesReporte = OPCIONES_REPORTE, h
       partes.push(['🟡 Pendientes:', ...b.pendientes.map((p) => `• ${nuevo(p.nuevo)}${p.texto}`)].join('\n'));
     }
     out.push(partes.join('\n\n'));
+  }
+
+  // arreglo económico
+  {
+    const renglones = renglonesArreglo(f.arreglo);
+    if (renglones.length) out.push(['*💸 ARREGLO ECONÓMICO*', ...renglones.map((l) => `${f.arreglo?.confirmado ? '✅' : '🟡'} ${l}`)].join('\n\n'));
+    else if (f.estado !== 'idea') out.push('*💸 ARREGLO ECONÓMICO*\n\n🟡 Pendiente: definir y cargar el arreglo económico.');
   }
 
   // ensayos ad hoc
