@@ -1,4 +1,6 @@
 import { TODAS_LAS_PREGUNTAS, seccionLabel } from '../model/checklist';
+import { renglonesArreglo } from '../model/arreglo';
+import { resumenValidacion } from '../model/validacion';
 import { ESTADO_ENSAYO_LABEL, faltantesEnsayo, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
 import { estadoQuorum } from '../model/quorum';
 import {
@@ -41,6 +43,8 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     Contraparte: f.contacto ?? '',
     'Idea / nota': f.nota ?? '',
     Quórum: estadoQuorum(f.quorum)?.texto ?? '',
+    'Arreglo económico': renglonesArreglo(f.arreglo).join(' '),
+    'Validación contraparte': (() => { const r = resumenValidacion(f); return r.total ? `${r.ok}/${r.total}` : ''; })(),
     Decisión: f.decision ? `${f.decision.avanza ? 'Avanza' : 'No avanza'}: ${f.decision.motivo}` : '',
     'Checklist %': progresoGeneral(f).porcentaje,
     'Pendientes abiertos': pendientesAbiertos(f).length,
