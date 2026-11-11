@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Link } from '../model/types';
+import { REFERENCIAS_INICIALES, type Referencias } from '../model/viatico';
 import { ID_DOCUMENTOS, esErrorDeRed } from './supabase';
 import { SinConexion } from './supabaseRepository';
 
@@ -27,6 +28,26 @@ export const DOCUMENTOS_INICIALES: Link[] = [
 export interface DocumentosRepo {
   cargar(): Promise<Link[]>;
   guardar(links: Link[]): Promise<void>;
+  /** valores de referencia de la calculadora de viático (iguales para todas las fechas) */
+  cargarReferencias(): Promise<Referencias>;
+  guardarReferencias(r: Referencias): Promise<void>;
+}
+
+const CLAVE_REF = 'produ-blc:referencias';
+function leerRefLocal(): Partial<Referencias> | null {
+  try {
+    const raw = window.localStorage.getItem(CLAVE_REF);
+    return raw ? (JSON.parse(raw) as Partial<Referencias>) : null;
+  } catch {
+    return null;
+  }
+}
+function escribirRefLocal(r: Referencias): void {
+  try {
+    window.localStorage.setItem(CLAVE_REF, JSON.stringify(r));
+  } catch {
+    /* sin storage */
+  }
 }
 
 function leerLocal(): Link[] | null {
@@ -52,6 +73,12 @@ class DocumentosLocal implements DocumentosRepo {
   async guardar(links: Link[]) {
     escribirLocal(links);
   }
+  async cargarReferencias() {
+    return { ...REFERENCIAS_INICIALES, ...(leerRefLocal() ?? {}) };
+  }
+  async guardarReferencias(r: Referencias) {
+    escribirRefLocal(r);
+  }
 }
 
 export class DocumentosNube implements DocumentosRepo {
@@ -73,11 +100,43 @@ export class DocumentosNube implements DocumentosRepo {
     }
   }
 
-  async guardar(links: Link[]): Promise<void> {
-    escribirLocal(links);
+  /** lee la fila especial completa (links + referencias) para no pisar lo que no se edita */
+  private async filaActual(): Promise<Record<string, unknown>> {
+    const { data, error } = await this.sb.from('fechas').select('data').eq('id', ID_DOCUMENTOS).maybeSingle();
+    if (error) throw esErrorDeRed(error) ? new SinConexion() : error;
+    return (data?.data as Record<string, unknown> | undefined) ?? {};
+  }
+
+  async cargarReferencias(): Promise<Referencias> {
+    try {
+      const fila = await this.filaActual();
+      const r = { ...REFERENCIAS_INICIALES, ...((fila.referencias as Partial<Referencias> | undefined) ?? leerRefLocal() ?? {}) };
+      escribirRefLocal(r);
+      return r;
+    } catch (e) {
+      if (e instanceof SinConexion || esErrorDeRed(e)) return { ...REFERENCIAS_INICIALES, ...(leerRefLocal() ?? {}) };
+      throw e;
+    }
+  }
+
+  async guardarReferencias(r: Referencias): Promise<void> {
+    escribirRefLocal(r);
+    const fila = await this.filaActual();
     const { error } = await this.sb.from('fechas').upsert({
       id: ID_DOCUMENTOS,
-      data: { id: ID_DOCUMENTOS, tipo: 'documentos', nombre: 'Documentación y accesos', links },
+      data: { id: ID_DOCUMENTOS, tipo: 'documentos', nombre: 'Documentación y accesos', ...fila, referencias: r },
+      actualizada: new Date().toISOString(),
+      actualizada_por: this.email,
+    });
+    if (error) throw esErrorDeRed(error) ? new SinConexion() : error;
+  }
+
+  async guardar(links: Link[]): Promise<void> {
+    escribirLocal(links);
+    const fila = await this.filaActual().catch(() => ({}));
+    const { error } = await this.sb.from('fechas').upsert({
+      id: ID_DOCUMENTOS,
+      data: { id: ID_DOCUMENTOS, tipo: 'documentos', nombre: 'Documentación y accesos', ...fila, links },
       actualizada: new Date().toISOString(),
       actualizada_por: this.email,
     });

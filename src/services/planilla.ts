@@ -1,4 +1,6 @@
 import { TODAS_LAS_PREGUNTAS, seccionLabel } from '../model/checklist';
+import { REFERENCIAS_INICIALES, calcular, type Referencias } from '../model/viatico';
+import { documentosRepo } from './documentos';
 import { renglonesArreglo } from '../model/arreglo';
 import { resumenValidacion } from '../model/validacion';
 import { ESTADO_ENSAYO_LABEL, faltantesEnsayo, horarioEnsayo, nombreEnsayo } from '../model/ensayos';
@@ -29,7 +31,7 @@ const fechaHoraLocal = (iso?: string) => {
   return Number.isNaN(d.getTime()) ? iso : d.toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
 };
 
-function hojas(fechas: Fecha[]): Record<string, Fila[]> {
+function hojas(fechas: Fecha[], ref: Referencias = REFERENCIAS_INICIALES): Record<string, Fila[]> {
   const ordenadas = [...fechas].sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
 
   const resumen: Fila[] = ordenadas.map((f) => ({
@@ -44,6 +46,7 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
     'Idea / nota': f.nota ?? '',
     Quórum: estadoQuorum(f.quorum)?.texto ?? '',
     'Arreglo económico': renglonesArreglo(f.arreglo).join(' '),
+    'Costo de movernos (directos, estimado)': f.viatico ? Math.round(calcular(f.viatico, ref).totalDirectos) : '',
     'Validación contraparte': (() => { const r = resumenValidacion(f); return r.total ? `${r.ok}/${r.total}` : ''; })(),
     Decisión: f.decision ? `${f.decision.avanza ? 'Avanza' : 'No avanza'}: ${f.decision.motivo}` : '',
     'Checklist %': progresoGeneral(f).porcentaje,
@@ -146,8 +149,9 @@ function hojas(fechas: Fecha[]): Record<string, Fila[]> {
 
 export async function exportarPlanilla(fechas: Fecha[]): Promise<boolean> {
   const XLSX = await import('xlsx');
+  const ref = await documentosRepo().cargarReferencias().catch(() => REFERENCIAS_INICIALES);
   const libro = XLSX.utils.book_new();
-  for (const [nombre, filas] of Object.entries(hojas(fechas))) {
+  for (const [nombre, filas] of Object.entries(hojas(fechas, ref))) {
     const hoja = filas.length ? XLSX.utils.json_to_sheet(filas) : XLSX.utils.aoa_to_sheet([['Sin datos']]);
     // ancho de columnas según el contenido (con tope, para que no queden gigantes)
     const columnas = filas.length ? Object.keys(filas[0]!) : ['Sin datos'];
