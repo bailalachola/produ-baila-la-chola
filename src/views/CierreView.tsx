@@ -16,6 +16,7 @@ import { Icon, Input, Select, TextArea, TituloSeccion } from '../components/ui';
 import { RiesgosEditor } from '../components/RiesgosEditor';
 import { useConfirmar } from '../components/Dialog';
 import { useBitacora } from '../pdf/useBitacora';
+import { MensajeBitacora } from '../components/MensajeBitacora';
 
 const BALANCES: { id: Balance; label: string }[] = [
   { id: 'positivo', label: 'Positivo' },
@@ -271,6 +272,8 @@ export function CierreView({ fecha }: { fecha: Fecha }) {
           <Icon name="pdf" size={24} /> {generando ? 'Armando la bitácora…' : 'Generar bitácora'}
         </button>
       </div>
+
+      {(fecha.estado === 'realizada' || cerrada) && <MensajeBitacora fecha={fecha} />}
     </section>
   );
 }

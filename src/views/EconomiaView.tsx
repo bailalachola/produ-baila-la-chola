@@ -15,6 +15,7 @@ import {
 import { Icon, Input, Select, TextArea, TituloSeccion, Vacio } from '../components/ui';
 import { useConfirmar } from '../components/Dialog';
 import { ArregloBloque } from '../components/ArregloBloque';
+import { CalculadoraViatico } from '../components/CalculadoraViatico';
 
 type Borrador = Omit<Movimiento, 'monto'> & { monto: string };
 
@@ -67,6 +68,8 @@ export function EconomiaView({ fecha }: { fecha: Fecha }) {
       <TituloSeccion bajada="El arreglo con la producción y los ingresos y gastos de la fecha. Pesos y dólares van siempre por separado.">Economía</TituloSeccion>
 
       <ArregloBloque fecha={fecha} />
+
+      <CalculadoraViatico fecha={fecha} />
 
       <h3 className="bloque__titulo economia__movs">Movimientos</h3>
 

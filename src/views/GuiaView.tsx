@@ -114,7 +114,7 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         momento: 'Cuando hay plata en juego',
         titulo: 'Dejamos claro el arreglo y la economía',
         texto:
-          'Primero el arreglo económico (obligatorio): cachet, viáticos, gorra, porcentaje… y qué cubre. Sale en el Integrador para que toda la murga sepa cómo es. Después, ingresos y gastos: quién pagó y quién recibió. Pesos y dólares siempre por separado.',
+          'Primero el arreglo económico (obligatorio): cachet, viáticos, gorra, porcentaje… y qué cubre. Sale en el Integrador para que toda la murga sepa cómo es. Para negociarlo, la calculadora “¿Cuánto nos cuesta movernos?” suma nafta, peajes, comida, agua, materiales y el valor de nuestro tiempo. Después, ingresos y gastos: quién pagó y quién recibió. Pesos y dólares siempre por separado.',
         donde: ['Economía'],
       },
     ],
@@ -192,7 +192,7 @@ const ETAPAS: { nombre: string; estado: (typeof ESTADOS)[number]; pasos: Paso[] 
         momento: 'Cuando está todo cargado',
         titulo: 'Cerramos y sacamos la Bitácora Chola',
         texto:
-          'Cerramos la fecha y generamos la Bitácora en PDF. Queda como registro de decisiones, ejecución y aprendizajes para las próximas fechas.',
+          'Cerramos la fecha y generamos la Bitácora en PDF. Queda como registro de decisiones, ejecución y aprendizajes para las próximas fechas. Después la compartimos en Cholas organizativas con el mensaje que arma la app.',
         donde: ['Retirada → Cerrar fecha', 'Bitácora'],
         tips: ['La de Córdoba es el ejemplo de cómo queda una fecha cerrada.'],
       },
