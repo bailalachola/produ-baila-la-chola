@@ -4,6 +4,7 @@ import type { Actividad } from './actividad';
 import type { Ensayo } from './ensayos';
 import type { Arreglo } from './arreglo';
 import type { Validacion } from './validacion';
+import type { Viatico } from './viatico';
 
 /**
  * MODELO DE DATOS DE LA PRODU
@@ -286,6 +287,8 @@ export interface Fecha {
   arreglo?: Arreglo;
   /** validación de condiciones con la producción del otro lado */
   validacion?: Validacion;
+  /** calculadora: cuánto nos cuesta movernos a esta fecha */
+  viatico?: Viatico;
   cierre: Cierre;
   /** versión de la fecha demo (para actualizarla sola) */
   demo?: number;

@@ -18,6 +18,16 @@ export interface Mejora {
 
 export const MEJORAS: Mejora[] = [
   {
+    cuando: '2026-11-11T18:00:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó “Compartir la Bitácora” 📕 en la Retirada: el mensaje para Cholas organizativas (versión corta o completa) con el balance, lo que funcionó, lo que cambiaríamos y los aprendizajes, listo para copiar y mandar con el PDF.',
+  },
+  {
+    cuando: '2026-11-06T10:00:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó la calculadora “¿Cuánto nos cuesta movernos?” 🚗 en Economía: nafta, peajes, comida, agua, materiales y el valor del tiempo de preparación. Los precios de referencia se actualizan una vez y sirven para todas las fechas.',
+  },
+  {
     cuando: '2026-11-02T15:00:00-03:00',
     autor: 'Cou',
     texto: 'sumó “Validar” 🤝: un mensaje para la producción del otro lado con lo que tenemos entendido, parte por parte (horarios, espacio, técnica, arreglo…), para que nos digan si estamos de acuerdo. Se anota qué validaron y qué cambió.',

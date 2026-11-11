@@ -113,7 +113,7 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
 
   // updates
   const updAntes = new Set(antes.updates.map((u) => u.id));
-  for (const u of despues.updates.filter((x) => !updAntes.has(x.id) && x.tema !== 'Validación con la contraparte')) {
+  for (const u of despues.updates.filter((x) => !updAntes.has(x.id) && x.tema !== 'Validación con la contraparte' && x.tema !== 'Bitácora compartida')) {
     const alGrupo = u.tema === 'Update al grupo';
     out.push({
       clave: `update:${u.id}`,
@@ -168,6 +168,8 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
   // arreglo económico
   if (despues.arreglo && !mismo(antes.arreglo, despues.arreglo)) out.push({ clave: 'arreglo', texto: 'actualizó el arreglo económico 💸', seccion: 'economia' });
 
+  if (despues.viatico && !mismo(antes.viatico, despues.viatico)) out.push({ clave: 'viatico', texto: 'actualizó la cuenta de cuánto nos cuesta movernos 🚗', seccion: 'economia' });
+
   // validación con la contraparte
   const vAntes = antes.validacion?.dimensiones ?? {};
   for (const [id, d] of Object.entries(despues.validacion?.dimensiones ?? {})) {
@@ -177,6 +179,9 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
     if (d.estado === 'cambios') out.push({ clave: `valid:${id}`, texto: `anotó cambios de la contraparte en ${nombre}`, seccion: 'validar' });
   }
   if (!antes.validacion?.enviado && despues.validacion?.enviado) out.push({ clave: 'valid-enviado', texto: 'mandó las condiciones a la producción del otro lado para validar', seccion: 'validar' });
+
+  if (!antes.updates.some((u) => u.tema === 'Bitácora compartida') && despues.updates.some((u) => u.tema === 'Bitácora compartida'))
+    out.push({ clave: 'bitacora-compartida', texto: 'compartió la Bitácora Chola en Cholas organizativas 📕', seccion: 'cierre' });
 
   // integrador
   if (despues.integrador && !mismo(antes.integrador, despues.integrador)) out.push({ clave: 'integrador', texto: 'editó el integrador', seccion: 'integrador' });
