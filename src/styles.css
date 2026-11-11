@@ -3738,3 +3738,162 @@ svg {
 .validacion-chip strong {
   color: var(--amarillo);
 }
+
+/* ---------------- calculadora de viático ---------------- */
+
+.calc {
+  display: grid;
+  gap: 12px;
+  margin: 0 0 28px;
+  padding: 16px 14px;
+  background: var(--papel);
+  color: var(--negro);
+  border-radius: var(--radio);
+  border-top: 6px solid var(--naranja);
+  box-shadow: var(--sombra-papel);
+}
+.calc .mini-campo,
+.calc .input {
+  min-width: 0;
+}
+.calc__total-chip {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--naranja);
+  color: var(--negro);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.calc__fila {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 420px) {
+  .calc__fila {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.calc__input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.calc__input em {
+  font-style: normal;
+  font-size: 0.85rem;
+  color: var(--gris);
+  white-space: nowrap;
+}
+.calc__input .input {
+  flex: 1;
+  font-variant-numeric: tabular-nums;
+}
+.calc__ajustes > summary,
+.calc__ref > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--violeta);
+}
+.calc__ajustes[open],
+.calc__ref[open] {
+  display: grid;
+  gap: 10px;
+}
+.calc__extras {
+  display: grid;
+  gap: 8px;
+}
+.calc__extra {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 8rem) auto;
+  gap: 8px;
+  align-items: center;
+}
+.calc__tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.calc__tabla th,
+.calc__tabla td {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--gris-claro);
+  vertical-align: top;
+}
+.calc__tabla th {
+  text-align: left;
+  font-weight: 600;
+}
+.calc__tabla th small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--gris);
+}
+.calc__tabla td {
+  text-align: right;
+  white-space: nowrap;
+  padding-left: 10px;
+  font-weight: 600;
+}
+.calc__sub th,
+.calc__sub td {
+  border-bottom: 2px solid var(--negro);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.calc__tiempo th,
+.calc__tiempo td {
+  color: var(--violeta);
+}
+.calc__total th,
+.calc__total td {
+  border-bottom: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+.calc__nota {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--gris);
+}
+.calc__compara {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--magenta);
+  background: var(--naranja-claro);
+  font-weight: 600;
+}
+.calc__compara.ok {
+  border-left-color: var(--violeta);
+  background: var(--violeta-claro);
+}
+
+/* ---------------- compartir la bitácora ---------------- */
+
+.mensaje-bitacora {
+  display: grid;
+  gap: 12px;
+}
+.mensaje-bitacora__bajada {
+  margin: 0;
+  opacity: 0.9;
+}
+.mensaje-bitacora__bajada strong {
+  color: var(--amarillo);
+}
+.mensaje-bitacora .opciones {
+  margin: 0;
+}
+.mensaje-bitacora__editar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.mensaje-bitacora__editar .link-btn {
+  color: var(--crema);
+}
