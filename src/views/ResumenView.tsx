@@ -7,6 +7,8 @@ import { RelatoCampos } from '../components/RelatoCampos';
 import { Campo, Icon, Input, Progreso, Select, TextArea, TituloSeccion } from '../components/ui';
 import { RiesgosEditor } from '../components/RiesgosEditor';
 import { QuorumBloque } from '../components/QuorumBloque';
+import { IdeaProduBloque } from '../components/IdeaProduBloque';
+import { pasoIdea } from '../model/ideaProdu';
 import { faltaArreglo } from '../model/arreglo';
 import { resumenValidacion } from '../model/validacion';
 import { CanceladaBanner, DecisionBloque } from '../components/DecisionBloque';
@@ -66,7 +68,17 @@ export function ResumenView({ fecha }: { fecha: Fecha }) {
               <Input id="idea-resp" value={fecha.responsable} placeholder="nombre o comisión" onChange={(e) => set('responsable', e.target.value)} />
             </Campo>
           </div>
-          <QuorumBloque fecha={fecha} />
+          <IdeaProduBloque fecha={fecha} />
+          {pasoIdea(fecha) === 'quorum' ? (
+            <QuorumBloque fecha={fecha} enIdea />
+          ) : (
+            <div className="quorum quorum--bloqueado" id="quorum">
+              <h3 className="quorum__titulo">2 · Quórum</h3>
+              <p className="quorum__bajada">
+                🔒 Se larga cuando Produ da el OK. Mandá el resumen de arriba al grupo de Produ y, cuando respondan que sí, tocá “Produ dio el OK”.
+              </p>
+            </div>
+          )}
           <DecisionBloque fecha={fecha} />
         </div>
       )}

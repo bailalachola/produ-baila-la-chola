@@ -16,6 +16,7 @@ import { BotonAvisos } from '../components/BotonAvisos';
 import { Campanita } from '../components/Campanita';
 import { agruparPorFecha } from '../model/agenda';
 import { estadoQuorum } from '../model/quorum';
+import { estadoIdeaProdu } from '../model/ideaProdu';
 
 type Filtro = 'activas' | 'ideas' | 'realizadas' | 'cerradas' | 'canceladas' | 'todas';
 
@@ -266,9 +267,10 @@ function FechaCard({ fecha: f, indice }: { fecha: Fecha; indice: number }) {
       ) : f.estado === 'idea' ? (
         <div className="card__pie card__pie--idea">
           <p className="card__nota">{f.nota?.trim() || 'Idea para más adelante. Todavía no la producimos.'}</p>
-          {estadoQuorum(f.quorum) && (
-            <span className={`quorum__estado quorum__estado--${estadoQuorum(f.quorum)!.tono}`}>{estadoQuorum(f.quorum)!.texto}</span>
-          )}
+          {(() => {
+            const e = estadoQuorum(f.quorum) ?? estadoIdeaProdu(f);
+            return e && <span className={`quorum__estado quorum__estado--${e.tono}`}>{e.texto}</span>;
+          })()}
         </div>
       ) : (
       <div className="card__pie">
