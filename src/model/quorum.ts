@@ -18,6 +18,8 @@ export interface Quorum {
   hora?: string;
   /** info extra que ayuda a decidir: paga traslado, es lejos, etc. */
   info?: string;
+  /** mensaje de contexto para antes de la encuesta, editado a mano (si no, se arma solo) */
+  contexto?: string;
   /** pregunta editada a mano (si no, se arma sola) */
   pregunta?: string;
   opciones: string[];

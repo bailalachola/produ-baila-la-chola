@@ -18,6 +18,11 @@ export interface Mejora {
 
 export const MEJORAS: Mejora[] = [
   {
+    cuando: '2026-11-17T18:00:00-03:00',
+    autor: 'Cou',
+    texto: 'sumó el camino de las ideas 💡: primero el “Resumen para Produ” (día, lugar, quién invita, la fecha, técnica, economía, camarín y pendientes), después el OK de Produ y recién ahí el quórum, que ahora va con un mensaje de contexto para que la murga sepa de qué se trata antes de contestar.',
+  },
+  {
     cuando: '2026-11-11T18:00:00-03:00',
     autor: 'Cou',
     texto: 'sumó “Compartir la Bitácora” 📕 en la Retirada: el mensaje para Cholas organizativas (versión corta o completa) con el balance, lo que funcionó, lo que cambiaríamos y los aprendizajes, listo para copiar y mandar con el PDF.',

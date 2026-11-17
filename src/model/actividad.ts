@@ -162,6 +162,10 @@ export function describirCambios(antes: Fecha, despues: Fecha): Cambio[] {
   }
   for (const id of ensAntes.keys()) if (!(despues.ensayos ?? []).some((e) => e.id === id)) out.push({ clave: `ensayo-borrado:${id}`, texto: 'borró un ensayo', seccion: 'ensayos' });
 
+  // idea → Produ
+  if (!antes.ideaProdu?.enviado && despues.ideaProdu?.enviado) out.push({ clave: 'idea-produ', texto: 'mandó la idea al grupo de Produ 💡', seccion: 'resumen' });
+  if (!antes.ideaProdu?.ok && despues.ideaProdu?.ok) out.push({ clave: 'idea-ok', texto: 'anotó el OK de Produ para largar el quórum ✅', seccion: 'resumen' });
+
   // quórum
   if (!antes.quorum?.enviado && despues.quorum?.enviado) out.push({ clave: 'quorum', texto: 'mandó la encuesta de quórum 🔴🔴🔴', seccion: 'resumen' });
 

@@ -3,6 +3,7 @@ import type { Quorum } from './quorum';
 import type { Actividad } from './actividad';
 import type { Ensayo } from './ensayos';
 import type { Arreglo } from './arreglo';
+import type { IdeaProdu } from './ideaProdu';
 import type { Validacion } from './validacion';
 import type { Viatico } from './viatico';
 
@@ -271,6 +272,8 @@ export interface Fecha {
   links: Link[];
   /** mensaje de WhatsApp para el grupo (si no existe, se sugiere desde el checklist) */
   integrador?: Integrador;
+  /** resumen de la idea para Produ y el OK para largar el quórum */
+  ideaProdu?: IdeaProdu;
   /** encuesta a la murga para saber si vamos */
   quorum?: Quorum;
   /** cuándo se mandó el último update al grupo (para marcar lo nuevo) */
