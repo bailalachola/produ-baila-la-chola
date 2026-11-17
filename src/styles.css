@@ -3897,3 +3897,63 @@ svg {
 .mensaje-bitacora__editar .link-btn {
   color: var(--crema);
 }
+
+/* ---------------- idea → resumen para Produ → quórum ---------------- */
+
+.idea-produ {
+  margin: 20px 0;
+  padding: 16px 14px;
+  border: 3px solid var(--negro);
+  border-radius: var(--radio);
+  background: var(--blanco);
+  color: var(--negro);
+}
+.idea-produ__titulo {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.idea-produ__titulo::before {
+  content: '💡 ';
+  font-size: 1rem;
+  vertical-align: middle;
+}
+.idea-produ__ayuda {
+  font-weight: 400;
+  opacity: 0.75;
+}
+.idea-produ__vista {
+  margin: 18px 0 6px;
+  font-weight: 700;
+}
+.idea-produ__ok {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radio);
+  background: #e3f6e6;
+  font-weight: 700;
+}
+.quorum--bloqueado {
+  border-style: dashed;
+  opacity: 0.8;
+}
+.quorum--bloqueado .quorum__bajada {
+  margin-bottom: 0;
+}
+.quorum__contexto {
+  margin: 0 0 18px;
+}
+.quorum__contexto h4,
+.quorum__subtitulo {
+  margin: 0 0 8px;
+}
+.quorum__contexto .btn {
+  margin-top: 10px;
+}
+.idea-produ .link-btn,
+.quorum .link-btn {
+  color: var(--violeta);
+}
