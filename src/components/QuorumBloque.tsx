@@ -13,12 +13,16 @@ import {
   type Quorum,
   type ResultadoQuorum,
 } from '../model/quorum';
+import { contextoFinalQuorum, contextoSugeridoQuorum } from '../model/ideaProdu';
 import { copiar } from '../lib/clipboard';
+import { FormatoWhatsApp } from '../views/IntegradorView';
+import { useState } from 'react';
 import { useToast } from './Toast';
 import { Icon, Input, TextArea } from './ui';
 
 /** Armar la encuesta de quórum para Cholas y registrar cómo salió */
-export function QuorumBloque({ fecha, onSeguir }: { fecha: Fecha; onSeguir?: () => void }) {
+export function QuorumBloque({ fecha, onSeguir, enIdea = false }: { fecha: Fecha; onSeguir?: () => void; enIdea?: boolean }) {
+  const [editandoCtx, setEditandoCtx] = useState(false);
   const { actualizar } = useStore();
   const toast = useToast();
   const q: Quorum = fecha.quorum ?? quorumVacio();
@@ -26,14 +30,17 @@ export function QuorumBloque({ fecha, onSeguir }: { fecha: Fecha; onSeguir?: () 
   const largo = [...pregunta].length;
   const estado = estadoQuorum(fecha.quorum);
   const alcanza = llegaAlMinimo(q);
+  const contexto = contextoFinalQuorum(fecha);
+  const ctxEditado = !!q.contexto?.trim();
 
   const guardar = (cambio: Partial<Quorum>) =>
     actualizar(fecha.id, (f) => ({ ...f, quorum: { ...(f.quorum ?? quorumVacio()), ...cambio } }));
 
   async function copiarTexto(texto: string, que: string) {
     const ok = await copiar(texto);
-    toast(ok ? `${que} copiada 📋` : 'No pudimos copiar. Probá de nuevo.', ok ? 'ok' : 'error');
+    if (!ok || que !== 'Contexto') toast(ok ? `${que} copiada 📋` : 'No pudimos copiar. Probá de nuevo.', ok ? 'ok' : 'error');
     if (ok && !q.enviado && que === 'Pregunta') guardar({ enviado: ahora() });
+    if (ok && que === 'Contexto') toast('Contexto copiado 📋 Pegalo en Cholas y abajo mandá la encuesta.');
   }
 
   function decidir(resultado: ResultadoQuorum) {
@@ -53,14 +60,63 @@ export function QuorumBloque({ fecha, onSeguir }: { fecha: Fecha; onSeguir?: () 
   return (
     <div className="quorum" id="quorum">
       <div className="quorum__cabeza">
-        <h3 className="quorum__titulo">Quórum</h3>
+        <h3 className="quorum__titulo">{enIdea ? '2 · Quórum' : 'Quórum'}</h3>
         {estado && <span className={`quorum__estado quorum__estado--${estado.tono}`}>{estado.texto}</span>}
       </div>
       <p className="quorum__bajada">
-        La encuesta para Cholas: tres rojos al principio y al final, para que la murga solo conteste. Según cómo sale, la fecha sigue o no.
+        Para Cholas: primero un mensaje con el contexto, así la que contesta sabe de qué se trata, y abajo la encuesta (tres rojos al principio y al
+        final, para que la murga solo conteste). Según cómo sale, la fecha sigue o no.
       </p>
 
+      <div className="quorum__contexto">
+        <h4>Mensaje de contexto</h4>
+        {editandoCtx ? (
+          <TextArea
+            aria-label="Mensaje de contexto para la murga"
+            className="input input--area reporte__texto"
+            rows={14}
+            value={q.contexto ?? contexto}
+            onChange={(e) => guardar({ contexto: e.target.value })}
+          />
+        ) : (
+          <div className="wa">
+            <div className="wa__burbuja ensayo__wa">
+              <FormatoWhatsApp texto={contexto} />
+            </div>
+          </div>
+        )}
+        <div className="mensaje-bitacora__editar">
+          <button type="button" className="link-btn" onClick={() => setEditandoCtx((x) => !x)}>
+            {editandoCtx ? 'Ver cómo queda' : 'Editar el texto a mano'}
+          </button>
+          {ctxEditado && (
+            <button
+              type="button"
+              className="link-btn"
+              onClick={() => {
+                guardar({ contexto: undefined });
+                setEditandoCtx(false);
+              }}
+            >
+              Volver a armarlo desde el resumen
+            </button>
+          )}
+        </div>
+        {ctxEditado && contexto !== contextoSugeridoQuorum(fecha) && (
+          <p className="quorum__ayuda">Estás usando el texto editado a mano: si cambia el resumen, no se actualiza solo.</p>
+        )}
+        <button type="button" className="btn btn--secundario btn--block" onClick={() => copiarTexto(contexto, 'Contexto')}>
+          <Icon name="copy" size={20} /> Copiar mensaje de contexto
+        </button>
+        <p className="quorum__ayuda">
+          Se arma con el resumen que fue a Produ{enIdea ? '' : ' (en la idea)'}. Sacá lo que sea solo para Produ antes de mandarlo.
+        </p>
+      </div>
+
+      <h4 className="quorum__subtitulo">La encuesta</h4>
+
       <div className="form">
+        {!enIdea && (
         <div className="form__fila">
           <label className="mini-campo">
             <span>Día</span>
@@ -75,8 +131,9 @@ export function QuorumBloque({ fecha, onSeguir }: { fecha: Fecha; onSeguir?: () 
             <Input placeholder="ej: 21:00" value={q.hora ?? ''} onChange={(e) => guardar({ hora: e.target.value })} />
           </label>
         </div>
+        )}
         <label className="mini-campo mini-campo--full">
-          <span>Info extra para decidir</span>
+          <span>Info extra en la pregunta (opcional)</span>
           <TextArea
             rows={2}
             placeholder="ej: Pagan traslado. Salimos 17hs desde Constitución."
